@@ -101,6 +101,7 @@ public class ServerProxy {
                 buf.append((char) b);
             }
             AuthResult L = (AuthResult) JSONParse.deserialize(buf.toString(), AuthResult.class);
+            ///ERROR HERE /\ NOT READING JSON INTO AUTHRESULT CORRECTLY
             DataCache data = DataCache.getInstance();
             data.setUsername(L.getAuthToken().getUserName(), L.getAuthToken().getPersonID());
             return L;
