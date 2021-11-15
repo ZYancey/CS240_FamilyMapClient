@@ -1,18 +1,13 @@
-package com.example.a240_familymapclient;
+package com.example.familymapclient.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import com.example.familymapclient.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,5 +34,14 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.fragmentContainer, fragment)
                     .commit();
         //}
+    }
+
+    public void loggedIn() {
+        invalidateOptionsMenu();
+        fm.beginTransaction().remove(fragment).commit();
+        //fragment = new MapFragment();
+        fm.beginTransaction()
+                .add(R.id.fragmentContainer, fragment)
+                .commit();
     }
 }

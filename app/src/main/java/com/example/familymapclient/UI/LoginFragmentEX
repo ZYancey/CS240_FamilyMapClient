@@ -1,4 +1,6 @@
-package com.example.a240_familymapclient;
+/*
+package com.example.familymapclient.UI;
+
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -18,16 +20,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-//import com.familymap.family_map.R;
-//import com.familymap.family_map.model.DataCache;
+import com.example.familymapclient.R;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import Network.DataCache;
 
-//import RequestResult.LoginRequest;
-//import RequestResult.RegisterRequest;
 
-public class LoginFragment extends Fragment {
+import request.LoginRequest;
+import request.RegisterRequest;
+
+public class LoginFragmentEX extends Fragment {
     EditText hostName;
     EditText port;
     EditText username;
@@ -130,7 +131,7 @@ public class LoginFragment extends Fragment {
 
         Button loginButton = v.findViewById(R.id.buttonLogin);
 
-        /*
+
         loginButton.setOnClickListener(v1 -> {
 
             // Set up a handler that will process messages from the task and make updates on the UI thread
@@ -158,12 +159,12 @@ public class LoginFragment extends Fragment {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.submit(task);
         });
-        */
+
 
 
         Button registerButton = v.findViewById(R.id.buttonRegister);
 
-        /*registerButton.setOnClickListener(v12 -> {
+        registerButton.setOnClickListener(v12 -> {
 
             // Set up a handler that will process messages from the task and make updates on the UI thread
             @SuppressLint("HandlerLeak")
@@ -182,13 +183,15 @@ public class LoginFragment extends Fragment {
 
             RegisterRequest rR = new RegisterRequest(usernameEditText, passwordEditText,
                     emailEditText, firstNameEditText, lastNameEditText, gender, null);
-
+/*
             // Create and execute the task on a separate thread
             RegisterAsyncTask task = new RegisterAsyncTask(uiThreadMessageHandler, rR,
                     serverHostEditText, serverPortEditText);
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.submit(task);
-        });*/
+
+ */
+        });
 
         return v;
     }
@@ -212,3 +215,4 @@ public class LoginFragment extends Fragment {
         return view;
     }
 }*/
+*/

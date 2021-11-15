@@ -1,4 +1,4 @@
-package com.example.a240_familymapclient;
+package com.example.familymapclient;
 
 import android.content.Context;
 
