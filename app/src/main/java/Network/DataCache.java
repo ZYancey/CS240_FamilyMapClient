@@ -15,6 +15,8 @@ public class DataCache {
     private String serverPort;
     private String serverHost;
     private Person user;
+    private String userFirst;
+    private String userLast;
     private String username;
     private String userPersonID;
     private ArrayList<Person> People = new ArrayList<>();
@@ -218,7 +220,12 @@ public class DataCache {
         this.user = user;
     }
 
+    public void setUserFirst(String userFirst){ this.userFirst = userFirst;}
+    public void setUserLast(String userLast){ this.userLast = userLast;}
 
+    public String getUserFirstandLast(){
+        return userFirst+" "+userLast;
+    }
 
     public String getUsername() {
         return username;
@@ -227,6 +234,10 @@ public class DataCache {
     public void setUsername(String username, String PersonID) {
         this.username = username;
         this.userPersonID = PersonID;
+    }
+
+    public String getUserPersonID(){
+        return userPersonID;
     }
 
     public ArrayList<Person> getPeople() {

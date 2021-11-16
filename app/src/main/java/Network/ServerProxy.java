@@ -15,6 +15,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+import modelClass.AuthToken;
 import modelClass.Person;
 import request.LoginRequest;
 import request.RegisterRequest;
@@ -58,14 +59,26 @@ public class ServerProxy {
             while ((b = br.read()) != -1) {
                 buf.append((char) b);
             }
-            AuthResult L = (AuthResult) JSONParse.deserialize(buf.toString(), AuthResult.class);
+
+            AuthToken L = (AuthToken) JSONParse.deserialize(buf.toString(), AuthToken.class);
+
             DataCache data = DataCache.getInstance();
-            data.setUsername(L.getAuthToken().getUserName(), L.getAuthToken().getPersonID());
-            return L;
+
+            data.setUsername(L.getUserName(), L.getPersonID());
+            AuthResult LRes = new AuthResult(L);
+            LRes.setMessage("valid");
+            return LRes;
+
+            //++++++
+
+            //AuthResult L = (AuthResult) JSONParse.deserialize(buf.toString(), AuthResult.class);
+            //DataCache data = DataCache.getInstance();
+            //data.setUsername(L.getAuthToken().getUserName(), L.getAuthToken().getPersonID());
+            //return L;
         }
         else {
             AuthResult L = new AuthResult("Failed to receive Result");
-            L.setMessage("Failed to receive Result");
+            //L.setMessage("Failed to receive Result");
             //L.setSuccess(false);
             return L;
         }
@@ -100,11 +113,16 @@ public class ServerProxy {
             while ((b = br.read()) != -1) {
                 buf.append((char) b);
             }
-            AuthResult L = (AuthResult) JSONParse.deserialize(buf.toString(), AuthResult.class);
-            ///ERROR HERE /\ NOT READING JSON INTO AUTHRESULT CORRECTLY
+
+            AuthToken L = (AuthToken) JSONParse.deserialize(buf.toString(), AuthToken.class);
+
             DataCache data = DataCache.getInstance();
-            data.setUsername(L.getAuthToken().getUserName(), L.getAuthToken().getPersonID());
-            return L;
+
+            data.setUsername(L.getUserName(), L.getPersonID());
+            AuthResult LRes = new AuthResult(L);
+            LRes.setMessage("valid");
+            return LRes;
+            //return LResult;
         }
         else {
             AuthResult L = new AuthResult("Failed to receive Result");
@@ -114,6 +132,41 @@ public class ServerProxy {
         }
 
     }
+
+    public PersonResult getUserPersonData(String authToken) throws MalformedURLException, IOException {
+        URL url = new URL("http://" + host + ":" + port+ "/person/" + data.getUserPersonID());
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setReadTimeout(5000);
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Content-Type", "application/json; utf-8");
+        connection.setRequestProperty("Accept", "application/json");
+        connection.addRequestProperty("Authorization", authToken);
+        connection.connect();
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            InputStream responseBody = connection.getInputStream();
+            InputStreamReader isr = new InputStreamReader(responseBody, StandardCharsets.UTF_8);
+            BufferedReader br = new BufferedReader(isr);
+            int b;
+            StringBuilder buf = new StringBuilder(512);
+            while ((b = br.read()) != -1) {
+                buf.append((char) b);
+            }
+            Person P = (Person) JSONParse.deserialize(buf.toString(), Person.class);
+            data.setUser(P);
+            PersonResult L = new PersonResult(P);
+            L.setMessage("valid");
+            return L;
+        }
+        else{
+            PersonResult L = new PersonResult("Failed to receive Result");
+            //L.setMessage("Failed to receive Result");
+            //L.setSuccess(false);
+            return L;
+        }
+    }
+
+
     /*
     public PeopleResult runPeople(String authToken) throws MalformedURLException, IOException {
         URL url = new URL("http://" + host + ":" + port+ "/person");
@@ -145,6 +198,7 @@ public class ServerProxy {
         }
 
     }
+
     public EventsResult runEvents(String authToken) throws MalformedURLException, IOException {
         URL url = new URL("http://" + host + ":" + port + "/event");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
