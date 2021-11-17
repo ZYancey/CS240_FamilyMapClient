@@ -273,7 +273,7 @@
             android:id="@+id/buttonRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#000000"
+            android:backgroundTint="@android:color/background_dark"
             android:text="Register"
             android:textStyle="bold" />
 
@@ -286,10 +286,10 @@
             android:id="@+id/buttonLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#000000"
+            android:backgroundTint="@android:color/background_dark"
             android:text="  Sign In  "
             android:textStyle="bold"
-            app:iconTint="#000000" />
+            app:iconTint="@android:color/background_dark" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

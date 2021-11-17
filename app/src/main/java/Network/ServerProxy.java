@@ -65,6 +65,7 @@ public class ServerProxy {
             DataCache data = DataCache.getInstance();
 
             data.setUsername(L.getUserName(), L.getPersonID());
+            data.setAuthToken(L);
             AuthResult LRes = new AuthResult(L);
             LRes.setMessage("valid");
             return LRes;
@@ -119,6 +120,7 @@ public class ServerProxy {
             DataCache data = DataCache.getInstance();
 
             data.setUsername(L.getUserName(), L.getPersonID());
+            data.setAuthToken(L);
             AuthResult LRes = new AuthResult(L);
             LRes.setMessage("valid");
             return LRes;
@@ -133,14 +135,15 @@ public class ServerProxy {
 
     }
 
-    public PersonResult getUserPersonData(String authToken) throws MalformedURLException, IOException {
-        URL url = new URL("http://" + host + ":" + port+ "/person/" + data.getUserPersonID());
+    public PersonResult getUserPersonData(AuthToken authToken) throws MalformedURLException, IOException {
+
+        URL url = new URL("http://" + host + ":" + port+ "/person/" + authToken.getPersonID());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setReadTimeout(5000);
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Content-Type", "application/json; utf-8");
         connection.setRequestProperty("Accept", "application/json");
-        connection.addRequestProperty("Authorization", authToken);
+        connection.addRequestProperty("Authorization", authToken.getAuthTokenID());
         connection.connect();
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
