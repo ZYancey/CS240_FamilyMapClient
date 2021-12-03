@@ -1,12 +1,12 @@
 package Network;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
+import java.util.List;
 
 import modelClass.AuthToken;
 import modelClass.Event;
 import modelClass.Person;
-import modelClass.User;
 
 public class DataCache {
     private static DataCache instance;
@@ -42,8 +42,8 @@ public class DataCache {
         return OriginalEvents;
     }
 
-    public void setOriginalEvents(ArrayList<Event> originalEvents) {
-        OriginalEvents = originalEvents;
+    public void setOriginalEvents(Event[] originalEvents) {
+        OriginalEvents = (ArrayList<Event>) Arrays.asList(originalEvents);
         MothersSidePeople = setMothersSidePeople();
         FathersSidePeople = setFathersSidePeople();
     }
@@ -246,6 +246,7 @@ public class DataCache {
 
     public void setPeople(ArrayList<Person> people) {
         People = people;
+
         for (Person p : people){
             if (userPersonID.equals(p.getPersonID())){
                 user = p;

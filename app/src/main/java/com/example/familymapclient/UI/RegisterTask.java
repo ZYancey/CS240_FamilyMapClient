@@ -1,8 +1,14 @@
 package com.example.familymapclient.UI;
 
+import com.example.familymapclient.R;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,12 +70,21 @@ interface RegisterTaskListener {
         }
         else {
             DataCache data = DataCache.getInstance();
-
             String FN = data.getUserFirstandLast();
-
-
             Toast.makeText(mcontext, FN, Toast.LENGTH_LONG).show();
 
+
+            //AuthToken authToken = new AuthToken(result.getUserName(),result.getAuthToken());
+            //data.setAuthToken(authToken);
+
+
+            PeopleTask task = new PeopleTask(mcontext);
+            task.execute(data.getAuthToken().getAuthTokenID());
+            /*EventsTask tasks = new EventsTask(mcontext);
+            tasks.execute(data.getAuthToken().getAuthToken());
+*/
+
+            MainActivity.getInstance().switchToMap();
 
         }
     }
