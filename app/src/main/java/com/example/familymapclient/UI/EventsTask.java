@@ -50,10 +50,6 @@ class EventsTask extends AsyncTask<String, Integer, EventResult> {
         try {
             EventsResult = serverProxy.runEvents(authToken[0]);
 
-
-
-
-
         }catch (IOException e){
             System.out.println(e.getMessage());
         }
@@ -69,7 +65,8 @@ class EventsTask extends AsyncTask<String, Integer, EventResult> {
         }
         else {
             DataCache data = DataCache.getInstance();
-            data.setOriginalEvents(result.getData());
+            //TODO FIX THIS FOR LOGIN
+            //data.setOriginalEvents(result.getData());
         }
     }
 }

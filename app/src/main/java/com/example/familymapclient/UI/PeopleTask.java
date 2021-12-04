@@ -65,6 +65,7 @@ class PeopleTask extends AsyncTask<String, Integer, PersonResult> {
         }
         else {
             DataCache data = DataCache.getInstance();
+            //TODO FIX THIS FOR LOGIN
             //data.setPeople(result.getData());
             Toast.makeText(mcontext, data.getUser().getFirstName() + " " + data.getUser().getLastName(), Toast.LENGTH_LONG).show();
         }

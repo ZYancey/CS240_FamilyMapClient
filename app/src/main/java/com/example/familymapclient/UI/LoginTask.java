@@ -85,12 +85,12 @@ class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
             //AuthToken authToken = new AuthToken(result.getUserName(),result.getAuthToken());
             //data.setAuthToken(authToken);
 
-            /*
+
             PeopleTask task = new PeopleTask(mcontext);
-            task.execute(data.getAuthToken().getAuthToken());
+            task.execute(data.getAuthToken().getAuthTokenID());
             EventsTask tasks = new EventsTask(mcontext);
-            tasks.execute(data.getAuthToken().getAuthToken());
-             */
+            tasks.execute(data.getAuthToken().getAuthTokenID());
+
 
             MainActivity.getInstance().switchToMap();
 

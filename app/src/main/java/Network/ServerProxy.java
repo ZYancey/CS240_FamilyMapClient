@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import modelClass.AuthToken;
+import modelClass.Event;
 import modelClass.Person;
 import request.LoginRequest;
 import request.RegisterRequest;
@@ -239,16 +240,25 @@ public class ServerProxy {
             while ((b = br.read()) != -1) {
                 buf.append((char) b);
             }
-            //EventsResult L = JSONParse.deserialize(buf.toString(), EventsResult.class);
-            //return L;
+
+            EventResult K = (EventResult) JSONParse.deserialize(buf.toString(), EventResult.class);
+
+            Event[] E = K.getData();
+
+            ArrayList<Event> list1 = new ArrayList<Event>();
+            Collections.addAll(list1, E);
+
+            data.setOriginalEvents(list1);
+
+            K.setMessage("Valid");
+            return K;
         }
         else {
-            //EventsResult L = new EventsResult();
-            //L.setMessage("Failed to receive Result");
+            EventResult L = new EventResult("Failed to receive result");
+            L.setMessage("Failed to receive Result");
            // L.setSuccess(false);
-           // return L;
+            return L;
         }
-    return null;
     }
 
 

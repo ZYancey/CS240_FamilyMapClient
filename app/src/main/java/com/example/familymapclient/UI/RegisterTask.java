@@ -80,9 +80,9 @@ interface RegisterTaskListener {
 
             PeopleTask task = new PeopleTask(mcontext);
             task.execute(data.getAuthToken().getAuthTokenID());
-            /*EventsTask tasks = new EventsTask(mcontext);
-            tasks.execute(data.getAuthToken().getAuthToken());
-*/
+            EventsTask tasks = new EventsTask(mcontext);
+            tasks.execute(data.getAuthToken().getAuthTokenID());
+
 
             MainActivity.getInstance().switchToMap();
 

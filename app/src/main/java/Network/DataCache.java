@@ -42,8 +42,9 @@ public class DataCache {
         return OriginalEvents;
     }
 
-    public void setOriginalEvents(Event[] originalEvents) {
-        OriginalEvents = (ArrayList<Event>) Arrays.asList(originalEvents);
+    public void setOriginalEvents(ArrayList<Event> originalEvents) {
+        OriginalEvents = originalEvents;
+
         MothersSidePeople = setMothersSidePeople();
         FathersSidePeople = setFathersSidePeople();
     }
@@ -99,6 +100,7 @@ public class DataCache {
     public void setFemaleEvents(boolean femaleEvents) {
         this.femaleEvents = femaleEvents;
     }
+
     public ArrayList<Event> getUserEvents(){
         ArrayList<Event> userEvents = new ArrayList<>() ;
         for (Event e :OriginalEvents){
