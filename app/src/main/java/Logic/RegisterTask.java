@@ -1,14 +1,9 @@
-package com.example.familymapclient.UI;
-
-import com.example.familymapclient.R;
+package Logic;
+import com.example.familymapclient.UI.MainActivity;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +14,7 @@ import Network.ServerProxy;
 import request.RegisterRequest;
 import result.AuthResult;
 
-class RegisterTask extends AsyncTask<RegisterRequest, Integer, AuthResult> {
+public class RegisterTask extends AsyncTask<RegisterRequest, Integer, AuthResult> {
 private Context mcontext;
 interface RegisterTaskListener {
     void progressUpdated(int progress);
@@ -84,7 +79,7 @@ interface RegisterTaskListener {
             tasks.execute(data.getAuthToken().getAuthTokenID());
 
 
-            MainActivity.getInstance().switchToMap();
+            MainActivity.getInstance().switchToMap(data.getUsername());
 
         }
     }

@@ -3,9 +3,7 @@ import com.example.familymapclient.R;
 
 import android.os.Bundle;
 
-import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -16,14 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.net.MalformedURLException;
-
+import Logic.LoginTask;
+import Logic.RegisterTask;
 import request.LoginRequest;
 import request.RegisterRequest;
 

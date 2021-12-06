@@ -13,43 +13,12 @@ import com.example.familymapclient.R;
 
 import Network.DataCache;
 
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
+
 public class MainActivity extends AppCompatActivity {
-/*
-    FragmentManager fm = getSupportFragmentManager();
-    Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
-
-    public MainActivity() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        invalidateOptionsMenu();
-        setContentView(R.layout.activity_main);
-        //Iconify.with(new FontAwesomeModule());
-        if (fragment == null) {
-            if (DataCache.hasUser()) {
-                fragment = new MapFragment();
-            }
-            else {
-                fragment = new LoginFragment();
-            }
-            fm.beginTransaction()
-                    .add(R.id.fragmentContainer, fragment)
-                    .commit();
-        }
-    }
-
-    public void loggedIn(){
-        invalidateOptionsMenu();
-        fm.beginTransaction().remove(fragment).commit();
-        fragment = new MapFragment();
-        fm.beginTransaction()
-                .add(R.id.fragmentContainer, fragment)
-                .commit();
-    }
-    */
-
     private static MainActivity instance = null;
     private final int REQ_CODE_ORDER_INFO = 1;
 
@@ -61,35 +30,32 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.instance = instance;
     }
 
-    public void switchToMap(){
+    public void switchToMap(String userName){
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer);
-        MapFragment mapFragment = new MapFragment();
+        MapFragment mapFragment = createMapFragment(userName);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setReorderingAllowed(true);
-
         // Replace whatever is in the fragment_container view with this fragment
         transaction.replace(R.id.fragmentContainer, mapFragment , null);
-
         // Commit the transaction
         transaction.commit();
     }
 
-    public void switchToLogin(){
+    public void switchToLogin(String userName){
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer);
-        LoginFragment loginFragment = new LoginFragment();
+        LoginFragment loginFragment = createLoginFragment(userName);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.setReorderingAllowed(true);
-
         // Replace whatever is in the fragment_container view with this fragment
         transaction.replace(R.id.fragmentContainer, loginFragment , null);
-
         // Commit the transaction
         transaction.commit();
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,12 +77,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (intent.getStringExtra("REFRESH") != null){
-            switchToMap();
+            switchToMap("emp");
         }
         else {
-            switchToLogin();
+            switchToLogin("emp");
         }
     }
+
+
+
+
+
 
     public static LoginFragment createLoginFragment(String title) {
         LoginFragment fragment = new LoginFragment();
@@ -130,9 +101,9 @@ public class MainActivity extends AppCompatActivity {
     public static MapFragment createMapFragment(String title) {
         MapFragment fragment = new MapFragment();
 
-        //Bundle args = new Bundle();
-        //args.putString(MapFragment.ARG_TITLE, title);
-        //fragment.setArguments(args);
+        Bundle args = new Bundle();
+        args.putString(MapFragment.ARG_TITLE, title);
+        fragment.setArguments(args);
 
         return fragment;
     }

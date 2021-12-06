@@ -1,4 +1,4 @@
-package com.example.familymapclient.UI;
+package Logic;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -6,68 +6,76 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import Network.DataCache;
 import Network.ServerProxy;
+import modelClass.Event;
 import modelClass.Person;
 import request.LoginRequest;
 
-import result.PersonResult;
+import result.EventResult;
 
-class PeopleTask extends AsyncTask<String, Integer, PersonResult> {
+public class EventsTask extends AsyncTask<String, Integer, EventResult> {
     private Context mcontext;
-    interface PeopleTaskListener {
+    interface EventsTaskListener {
         void progressUpdated(int progress);
         void taskCompleted(long result);
     }
-    public PeopleTask(Context context){
+    public EventsTask(Context context){
         mcontext = context;
     }
-    private final List<PeopleTaskListener> listeners = new ArrayList<>();
+    private final List<EventsTaskListener> listeners = new ArrayList<>();
 
 
-    void PeopleListener(PeopleTaskListener listener) {
+    void EventsListener(EventsTaskListener listener) {
         listeners.add(listener);
     }
 
     private void fireProgressUpdate(int progress) {
-        for(PeopleTaskListener listener : listeners) {
+        for(EventsTaskListener listener : listeners) {
             listener.progressUpdated(progress);
         }
     }
 
     private void fireTaskCompleted(long result) {
-        for(PeopleTaskListener listener : listeners) {
+        for(EventsTaskListener listener : listeners) {
             listener.taskCompleted(result);
         }
     }
 
     @Override
-    protected PersonResult doInBackground(String... authToken) {
-        PersonResult PeopleResult = new PersonResult("test");
+    protected EventResult doInBackground(String... authToken) {
+        EventResult EventsResult = new EventResult("EXAMPLE STRING");
         ServerProxy serverProxy = new ServerProxy();
         try {
-            PeopleResult = serverProxy.runPeople(authToken[0]);
+            EventsResult = serverProxy.runEvents(authToken[0]);
 
         }catch (IOException e){
             System.out.println(e.getMessage());
         }
-        return PeopleResult;
+
+        return EventsResult;
     }
 
 
 
     @Override
-    protected void onPostExecute(PersonResult result) {
+    protected void onPostExecute(EventResult result) {
         if (!result.getMessage().contains("val")) {
-            Toast.makeText(mcontext, "Login Failed",Toast.LENGTH_LONG).show();
+            //ttToast.makeText(mcontext, "Login Failed",Toast.LENGTH_LONG).show();
         }
         else {
             DataCache data = DataCache.getInstance();
             //TODO FIX THIS FOR LOGIN
-            //data.setPeople(result.getData());
-            Toast.makeText(mcontext, data.getUser().getFirstName() + " " + data.getUser().getLastName(), Toast.LENGTH_LONG).show();
+            Event[] R = result.getData();
+
+            ArrayList<Event> list1 = new ArrayList<Event>();
+            Collections.addAll(list1, R);
+
+
+            data.setOriginalEvents(list1);
         }
     }
 }

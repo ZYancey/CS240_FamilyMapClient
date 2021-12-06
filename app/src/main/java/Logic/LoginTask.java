@@ -1,29 +1,22 @@
-package com.example.familymapclient.UI;
-import com.example.familymapclient.R;
+package Logic;
+import com.example.familymapclient.UI.MainActivity;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import androidx.fragment.app.FragmentManager;
-
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import Network.ServerProxy;
-import modelClass.AuthToken;
 import request.LoginRequest;
 import result.AuthResult;
 
 import Network.DataCache;
-import Network.ServerProxy;
-import result.PersonResult;
 
-import static android.app.PendingIntent.getActivity;
 
-class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
+public class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
     private Context mcontext;
     interface LoginTaskListener {
         void progressUpdated(int progress);
@@ -56,6 +49,7 @@ class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
     protected AuthResult doInBackground(LoginRequest... r) {
         AuthResult loginResult = new AuthResult("nullSTRING");
         ServerProxy serverProxy = new ServerProxy();
+
         DataCache data = DataCache.getInstance();
 
         try {
@@ -78,9 +72,9 @@ class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
         }
         else {
             DataCache data = DataCache.getInstance();
-            String FN = data.getUser().getFirstName();
-            String LN = data.getUser().getLastName();
-            Toast.makeText(mcontext, FN+" "+LN, Toast.LENGTH_LONG).show();
+            String FN = data.getUserFirstandLast();
+            //String LN = data.getUser().getLastName();
+            Toast.makeText(mcontext, FN, Toast.LENGTH_LONG).show();
 
             //AuthToken authToken = new AuthToken(result.getUserName(),result.getAuthToken());
             //data.setAuthToken(authToken);
@@ -92,8 +86,7 @@ class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
             tasks.execute(data.getAuthToken().getAuthTokenID());
 
 
-            MainActivity.getInstance().switchToMap();
-
+            MainActivity.getInstance().switchToMap(data.getUsername());
 
         }
     }

@@ -68,6 +68,8 @@ public class ServerProxy {
 
             DataCache data = DataCache.getInstance();
 
+            data.refresh();
+
             data.setUsername(L.getUserName(), L.getPersonID());
             data.setAuthToken(L);
             AuthResult LRes = new AuthResult(L);
@@ -122,6 +124,7 @@ public class ServerProxy {
             AuthToken L = (AuthToken) JSONParse.deserialize(buf.toString(), AuthToken.class);
 
             DataCache data = DataCache.getInstance();
+            data.refresh();
 
             data.setUsername(L.getUserName(), L.getPersonID());
             data.setAuthToken(L);

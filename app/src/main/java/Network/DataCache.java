@@ -10,29 +10,33 @@ import modelClass.Person;
 
 public class DataCache {
     private static DataCache instance;
-
     private AuthToken authToken;
-    private String serverPort;
-    private String serverHost;
-    private Person user;
-    private String userFirst;
-    private String userLast;
-    private String username;
-    private String userPersonID;
-    private ArrayList<Person> People = new ArrayList<>();
-    private ArrayList<Event>OriginalEvents = new ArrayList<>();
-    private ArrayList<Event>Events = new ArrayList<>();
-    private ArrayList<Person> MothersSidePeople = new ArrayList<>();
-    private ArrayList<Person> FathersSidePeople = new ArrayList<>();
-    private ArrayList<Person> MothersSide = new ArrayList<>();
-    private ArrayList<Person> FathersSide = new ArrayList<>();
-    private boolean lifeStoryLines = true;
-    private boolean familyTreeLines = true;
-    private boolean spouseLines = true;
-    private boolean fathersSide = true;
-    private boolean mothersSide = true;
-    private boolean maleEvents = true;
-    private boolean femaleEvents = true;
+
+    private String              serverPort;
+    private String              serverHost;
+    private Person              user;
+    private String              userFirst;
+    private String              userLast;
+    private String              username;
+    private String              userPersonID;
+
+    private ArrayList<Person>   People = new ArrayList<>();
+    private ArrayList<Event>    OriginalEvents = new ArrayList<>();
+    private ArrayList<Event>    Events = new ArrayList<>();
+    private ArrayList<Person>   MothersSidePeople = new ArrayList<>();
+    private ArrayList<Person>   FathersSidePeople = new ArrayList<>();
+    private ArrayList<Person>   MothersSide = new ArrayList<>();
+    private ArrayList<Person>   FathersSide = new ArrayList<>();
+
+    private boolean             lifeStoryLines = true;
+    private boolean             familyTreeLines = true;
+    private boolean             spouseLines = true;
+    private boolean             fathersSide = true;
+    private boolean             mothersSide = true;
+    private boolean             maleEvents = true;
+    private boolean             femaleEvents = true;
+
+
 
     public boolean getLifeStoryLines() {
         return lifeStoryLines;
@@ -184,7 +188,7 @@ public class DataCache {
         for (Event e : events){
             for (Person p : People){
                 if (p.getPersonID().equals(e.getPersonID())){
-                    if (p.getGender().equals("m")){
+                    if (p.getGender().equals("m") || p.getGender().equals("M")){
                         Maleevents.add(e);
                     }
                 }
@@ -197,7 +201,7 @@ public class DataCache {
         for (Event e : events){
             for (Person p : People){
                 if (p.getPersonID().equals(e.getPersonID())){
-                    if (p.getGender().equals("f")){
+                    if (p.getGender().equals("f") || p.getGender().equals("F")){
                         Femaleevents.add(e);
                     }
                 }
@@ -220,6 +224,8 @@ public class DataCache {
 
     public void setUser(Person user) {
         this.user = user;
+        setUserFirst(user.getFirstName());
+        setUserLast(user.getLastName());
     }
 
     public void setUserFirst(String userFirst){ this.userFirst = userFirst;}
@@ -286,5 +292,29 @@ public class DataCache {
             instance = new DataCache();
         }
         return instance;
+    }
+
+    public void refresh() { //I know I can create and call multiple instances but this seemed easier
+        lifeStoryLines = true;
+        familyTreeLines = true;
+        spouseLines = true;
+        fathersSide = true;
+        mothersSide = true;
+        maleEvents = true;
+        femaleEvents = true;
+
+        user = null;
+        userFirst = null;
+        userLast = null;
+        username = null;
+        userPersonID = null;
+
+        People.clear();
+        OriginalEvents.clear();
+        Events.clear();
+        MothersSidePeople.clear();
+        FathersSidePeople.clear();
+        MothersSide.clear();
+        FathersSide.clear();
     }
 }

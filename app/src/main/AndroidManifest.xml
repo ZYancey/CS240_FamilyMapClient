@@ -21,6 +21,19 @@
         android:theme="@style/Theme.240_FamilyMapClient"
         android:usesCleartextTraffic="true">
 
+        <activity
+            android:name=".UI.SettingsActivity"
+            android:parentActivityName=".UI.MainActivity" />
+        <activity
+            android:name=".UI.SearchActivity"
+            android:parentActivityName=".UI.MainActivity" />
+        <activity
+            android:name=".UI.EventActivity"
+            android:parentActivityName=".UI.MainActivity" />
+        <activity
+            android:name=".UI.PersonActivity"
+            android:parentActivityName=".UI.MainActivity" />
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
