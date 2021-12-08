@@ -1,22 +1,16 @@
 package Network;
 
-import android.util.Log;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import modelClass.AuthToken;
 import modelClass.Event;
@@ -26,16 +20,15 @@ import request.RegisterRequest;
 import result.EventResult;
 import result.AuthResult;
 import result.PersonResult;
-//import result.RegisterResult;
+
 
 public class ServerProxy {
 
-    private static final String LOG_TAG = "ServerProxy";
-    private static DataCache data = DataCache.getInstance();
-    private static String host = data.getServerHost();
-    private static String port = data.getServerPort();
+    private static final DataCache data = DataCache.getInstance();
+    private static final String host = data.getFMSHost();
+    private static final String port = data.getFMSPort();
 
-    public AuthResult runLogin(LoginRequest r) throws MalformedURLException, IOException {
+    public AuthResult runLogin(LoginRequest r) throws IOException {
         URL url = new URL("http://" + host + ":" + port + "/user/login");
         System.out.println(url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -45,12 +38,11 @@ public class ServerProxy {
         connection.setRequestProperty("Content-Type", "application/json; utf-8");
         connection.setRequestProperty("Accept", "application/json");
         connection.connect();
-        try(OutputStream requestBody = connection.getOutputStream();){
+        try(OutputStream requestBody = connection.getOutputStream()){
             String json = JSONParse.serialize(r);
-            OutputStreamWriter osw = new OutputStreamWriter(requestBody, "UTF-8");
+            OutputStreamWriter osw = new OutputStreamWriter(requestBody, StandardCharsets.UTF_8);
             osw.write(json);
             osw.close();
-            requestBody.close();
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
@@ -68,32 +60,22 @@ public class ServerProxy {
 
             DataCache data = DataCache.getInstance();
 
-            data.refresh();
+            data.refreshDataCache();
 
             data.setUsername(L.getUserName(), L.getPersonID());
             data.setAuthToken(L);
             AuthResult LRes = new AuthResult(L);
             LRes.setMessage("valid");
             return LRes;
-
-            //++++++
-
-            //AuthResult L = (AuthResult) JSONParse.deserialize(buf.toString(), AuthResult.class);
-            //DataCache data = DataCache.getInstance();
-            //data.setUsername(L.getAuthToken().getUserName(), L.getAuthToken().getPersonID());
-            //return L;
         }
         else {
-            AuthResult L = new AuthResult("Failed to receive Result");
-            //L.setMessage("Failed to receive Result");
-            //L.setSuccess(false);
-            return L;
+            return new AuthResult("Failed to receive Result");
         }
 
     }
 
 
-    public AuthResult runRegister(RegisterRequest r) throws MalformedURLException, IOException {
+    public AuthResult runRegister(RegisterRequest r) throws IOException {
         URL url = new URL("http://" + host + ":" + port + "/user/register");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setReadTimeout(5000);
@@ -102,12 +84,11 @@ public class ServerProxy {
         connection.setRequestProperty("Content-Type", "application/json; utf-8");
         connection.setRequestProperty("Accept", "application/json");
         connection.connect();
-        try(OutputStream requestBody = connection.getOutputStream();){
+        try(OutputStream requestBody = connection.getOutputStream()){
             String json = JSONParse.serialize(r);
-            OutputStreamWriter osw = new OutputStreamWriter(requestBody, "UTF-8");
+            OutputStreamWriter osw = new OutputStreamWriter(requestBody, StandardCharsets.UTF_8);
             osw.write(json);
             osw.close();
-            requestBody.close();
         } catch (IOException e){
             System.out.println(e.getMessage());
         }
@@ -124,25 +105,21 @@ public class ServerProxy {
             AuthToken L = (AuthToken) JSONParse.deserialize(buf.toString(), AuthToken.class);
 
             DataCache data = DataCache.getInstance();
-            data.refresh();
+            data.refreshDataCache();
 
             data.setUsername(L.getUserName(), L.getPersonID());
             data.setAuthToken(L);
             AuthResult LRes = new AuthResult(L);
             LRes.setMessage("valid");
             return LRes;
-            //return LResult;
         }
         else {
-            AuthResult L = new AuthResult("Failed to receive Result");
-            //L.setMessage("Failed to receive Result");
-            //L.setSuccess(false);
-            return L;
+            return new AuthResult("Failed to receive Result");
         }
 
     }
 
-    public PersonResult getUserPersonData(AuthToken authToken) throws MalformedURLException, IOException {
+    public void getUserPersonData(AuthToken authToken) throws IOException {
     ///TODO FIX CRASH WHEN USER ATTEMPTS TO LOGIN AND DOES NOT EXIST YET .getPersonID() results in Null
         URL url = new URL("http://" + host + ":" + port+ "/person/" + authToken.getPersonID());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -166,19 +143,15 @@ public class ServerProxy {
             data.setUser(P);
             PersonResult L = new PersonResult(P);
             L.setMessage("valid");
-            return L;
         }
         else{
             PersonResult L = new PersonResult("Failed to receive Result");
-            //L.setMessage("Failed to receive Result");
-            //L.setSuccess(false);
-            return L;
         }
     }
 
 
 
-    public PersonResult runPeople(String authToken) throws MalformedURLException, IOException {
+    public PersonResult runPeople(String authToken) throws IOException {
         URL url = new URL("http://" + host + ":" + port+ "/person");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setReadTimeout(5000);
@@ -198,12 +171,9 @@ public class ServerProxy {
                 buf.append((char) b);
             }
 
-            //TODO CONFIRM THIS IS READING CORRECTLY
             PersonResult K = (PersonResult) JSONParse.deserialize(buf.toString(), PersonResult.class);
 
             Person[] P = K.getData();
-
-            //PersonResult L = new PersonResult(P[0]); //Cast to Array??
 
             ArrayList<Person> list1 = new ArrayList<Person>();
             Collections.addAll(list1, P);
@@ -217,14 +187,13 @@ public class ServerProxy {
         else {
             PersonResult L = new PersonResult("Failed to receive result");
             L.setMessage("Failed to receive Result");
-            //L.setSuccess(false);
             return L;
         }
 
     }
 
 
-    public EventResult runEvents(String authToken) throws MalformedURLException, IOException {
+    public EventResult runEvents(String authToken) throws IOException {
         URL url = new URL("http://" + host + ":" + port + "/event");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setReadTimeout(5000);
@@ -259,18 +228,9 @@ public class ServerProxy {
         else {
             EventResult L = new EventResult("Failed to receive result");
             L.setMessage("Failed to receive Result");
-           // L.setSuccess(false);
             return L;
         }
     }
 
-
-
-    public void writeString(String str, OutputStream os) throws IOException {
-        OutputStreamWriter sw = new OutputStreamWriter(os);
-        BufferedWriter bw = new BufferedWriter(sw);
-        bw.write(str);
-        bw.flush();
-    }
 
 }

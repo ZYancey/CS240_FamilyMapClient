@@ -59,18 +59,13 @@ interface RegisterTaskListener {
 
     @Override
     protected void onPostExecute(AuthResult result) {
-        //if (result.getSuccess() == false) {
         if (!result.getMessage().contains("val")) {
             Toast.makeText(mcontext, "Register Failed",Toast.LENGTH_LONG).show();
         }
         else {
             DataCache data = DataCache.getInstance();
-            String FN = data.getUserFirstandLast();
+            String FN = data.getUserFullName();
             Toast.makeText(mcontext, FN, Toast.LENGTH_LONG).show();
-
-
-            //AuthToken authToken = new AuthToken(result.getUserName(),result.getAuthToken());
-            //data.setAuthToken(authToken);
 
 
             PeopleTask task = new PeopleTask(mcontext);

@@ -1,19 +1,17 @@
 package Network;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import modelClass.AuthToken;
 import modelClass.Event;
 import modelClass.Person;
 
 public class DataCache {
-    private static DataCache instance;
-    private AuthToken authToken;
+    private static DataCache    instance;
+    private AuthToken           authToken;
+    private String              FMSPort;
+    private String              FMSHost;
 
-    private String              serverPort;
-    private String              serverHost;
     private Person              user;
     private String              userFirst;
     private String              userLast;
@@ -25,10 +23,10 @@ public class DataCache {
     private ArrayList<Event>    Events = new ArrayList<>();
     private ArrayList<Person>   MothersSidePeople = new ArrayList<>();
     private ArrayList<Person>   FathersSidePeople = new ArrayList<>();
-    private ArrayList<Person>   MothersSide = new ArrayList<>();
-    private ArrayList<Person>   FathersSide = new ArrayList<>();
+    private final ArrayList<Person>   MothersSide = new ArrayList<>();
+    private final ArrayList<Person>   FathersSide = new ArrayList<>();
 
-    private boolean             lifeStoryLines = true;
+    private boolean             eventLines = true;
     private boolean             familyTreeLines = true;
     private boolean             spouseLines = true;
     private boolean             fathersSide = true;
@@ -38,13 +36,7 @@ public class DataCache {
 
 
 
-    public boolean getLifeStoryLines() {
-        return lifeStoryLines;
-    }
-
-    public ArrayList<Event> getOriginalEvents() {
-        return OriginalEvents;
-    }
+    //=================SETTERS==========================
 
     public void setOriginalEvents(ArrayList<Event> originalEvents) {
         OriginalEvents = originalEvents;
@@ -52,67 +44,26 @@ public class DataCache {
         MothersSidePeople = setMothersSidePeople();
         FathersSidePeople = setFathersSidePeople();
     }
-
-    public void setLifeStoryLines(boolean lifeStoryLines) {
-        this.lifeStoryLines = lifeStoryLines;
+    public void setEventLines(boolean eventLines) {
+        this.eventLines = eventLines;
     }
-
-    public boolean getFamilyTreeLines() {
-        return familyTreeLines;
-    }
-
     public void setFamilyTreeLines(boolean familyTreeLines) {
         this.familyTreeLines = familyTreeLines;
     }
-
-    public boolean getSpouseLines() {
-        return spouseLines;
-    }
-
     public void setSpouseLines(boolean spouseLines) {
         this.spouseLines = spouseLines;
     }
-
-    public boolean getFathersSide() {
-        return fathersSide;
-    }
-
     public void setFathersSide(boolean fathersSide) {
         this.fathersSide = fathersSide;
     }
-
-    public boolean getMothersSide() {
-        return mothersSide;
-    }
-
     public void setMothersSide(boolean mothersSide) {
         this.mothersSide = mothersSide;
     }
-
-    public boolean getMaleEvents() {
-        return maleEvents;
-    }
-
     public void setMaleEvents(boolean maleEvents) {
         this.maleEvents = maleEvents;
     }
-
-    public boolean getFemaleEvents() {
-        return femaleEvents;
-    }
-
     public void setFemaleEvents(boolean femaleEvents) {
         this.femaleEvents = femaleEvents;
-    }
-
-    public ArrayList<Event> getUserEvents(){
-        ArrayList<Event> userEvents = new ArrayList<>() ;
-        for (Event e :OriginalEvents){
-            if (e.getPersonID().equals(user.getPersonID())){
-                userEvents.add(e);
-            }
-        }
-        return userEvents;
     }
 
 
@@ -138,51 +89,18 @@ public class DataCache {
         }
         return MEvents;
     }
+
+    private ArrayList<Person> setFathersSidePeople(){
+        getFemaleFamilySide(getUser().getFatherID());
+        return FathersSide;
+    }
     private ArrayList<Person> setMothersSidePeople(){
         if (getUser() != null) {
-            getMFamilySide(getUser().getMotherID());
+            getMaleFamilySide(getUser().getMotherID());
         }
         return MothersSide;
     }
 
-    private void getMFamilySide(String personID){
-        Person p = null;
-        for (Person c : People){
-            if (c.getPersonID().equals(personID)){
-                p = c;
-            }
-        }
-        if (p != null) {
-            for (Person k : People) {
-                if (p.getPersonID().equals(k.getPersonID())) {
-                    MothersSide.add(p);
-                    getMFamilySide(p.getFatherID());
-                    getMFamilySide(p.getMotherID());
-                }
-            }
-        }
-    }
-    private ArrayList<Person> setFathersSidePeople(){
-        getFFamilySide(getUser().getFatherID());
-        return FathersSide;
-    }
-    private void getFFamilySide(String personID){
-        Person p = null;
-        for (Person c : People){
-            if (c.getPersonID().equals(personID)){
-                p = c;
-            }
-        }
-        if (p != null) {
-            for (Person k : People) {
-                if (p.getPersonID().equals(k.getPersonID())) {
-                    FathersSide.add(p);
-                    getFFamilySide(p.getFatherID());
-                    getFFamilySide(p.getMotherID());
-                }
-            }
-        }
-    }
     public ArrayList<Event> setMaleEvents(ArrayList<Event> events){
         ArrayList<Event> Maleevents = new ArrayList<>();
         for (Event e : events){
@@ -210,46 +128,20 @@ public class DataCache {
         return Femaleevents;
     }
 
-    public Person getUser() {
-        return user;
-    }
-
-    public ArrayList<Event> getEvents() {
-        return Events;
-    }
-
-    public void setEvents(ArrayList<Event> events) {
-        Events = events;
-    }
 
     public void setUser(Person user) {
         this.user = user;
         setUserFirst(user.getFirstName());
         setUserLast(user.getLastName());
     }
-
+    public void setEvents(ArrayList<Event> events) {
+        Events = events;
+    }
     public void setUserFirst(String userFirst){ this.userFirst = userFirst;}
     public void setUserLast(String userLast){ this.userLast = userLast;}
-
-    public String getUserFirstandLast(){
-        return userFirst+" "+userLast;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
     public void setUsername(String username, String PersonID) {
         this.username = username;
         this.userPersonID = PersonID;
-    }
-
-    public String getUserPersonID(){
-        return userPersonID;
-    }
-
-    public ArrayList<Person> getPeople() {
-        return People;
     }
 
     public void setPeople(ArrayList<Person> people) {
@@ -262,29 +154,25 @@ public class DataCache {
         }
     }
 
-
-    public AuthToken getAuthToken() {
-        return authToken;
-    }
-
     public void setAuthToken(AuthToken authToken) {
         this.authToken = authToken;
     }
-
-    public String getServerPort() {
-        return serverPort;
+    public void setFMSPort(String FMSPort) {
+        this.FMSPort = FMSPort;
+    }
+    public void setFMSHost(String FMSHost) {
+        this.FMSHost = FMSHost;
     }
 
-    public void setServerPort(String serverPort) {
-        this.serverPort = serverPort;
+    //=================GETTERS==========================
+    public AuthToken getAuthToken() {
+        return authToken;
     }
-
-    public String getServerHost() {
-        return serverHost;
+    public String getFMSPort() {
+        return FMSPort;
     }
-
-    public void setServerHost(String serverHost) {
-        this.serverHost = serverHost;
+    public String getFMSHost() {
+        return FMSHost;
     }
 
     public static DataCache getInstance(){
@@ -294,8 +182,95 @@ public class DataCache {
         return instance;
     }
 
-    public void refresh() { //I know I can create and call multiple instances but this seemed easier
-        lifeStoryLines = true;
+    public boolean getEventLines() {
+        return eventLines;
+    }
+
+    public boolean getFamilyTreeLines() {
+        return familyTreeLines;
+    }
+    public boolean getSpouseLines() {
+        return spouseLines;
+    }
+    public boolean getFathersSide() {
+        return fathersSide;
+    }
+    public boolean getMothersSide() {
+        return mothersSide;
+    }
+    public boolean getMaleEvents() {
+        return maleEvents;
+    }
+    public boolean getFemaleEvents() {
+        return femaleEvents;
+    }
+
+    public ArrayList<Event> getUserEvents(){
+        ArrayList<Event> userEvents = new ArrayList<>() ;
+        for (Event e :OriginalEvents){
+            if (e.getPersonID().equals(user.getPersonID())||e.getPersonID().equals(user.getSpouseID())){
+                userEvents.add(e);
+            }
+        }
+        return userEvents;
+    }
+
+    private void getMaleFamilySide(String personID){
+        Person p = null;
+        for (Person c : People){
+            if (c.getPersonID().equals(personID)){
+                p = c;
+            }
+        }
+        if (p != null) {
+            for (Person k : People) {
+                if (p.getPersonID().equals(k.getPersonID())) {
+                    MothersSide.add(p);
+                    getMaleFamilySide(p.getFatherID());
+                    getMaleFamilySide(p.getMotherID());
+                }
+            }
+        }
+    }
+    private void getFemaleFamilySide(String personID){
+        Person p = null;
+        for (Person c : People){
+            if (c.getPersonID().equals(personID)){
+                p = c;
+            }
+        }
+        if (p != null) {
+            for (Person k : People) {
+                if (p.getPersonID().equals(k.getPersonID())) {
+                    FathersSide.add(p);
+                    getFemaleFamilySide(p.getFatherID());
+                    getFemaleFamilySide(p.getMotherID());
+                }
+            }
+        }
+    }
+
+    public Person getUser() {
+        return user;
+    }
+    public ArrayList<Event> getEvents() {
+        return Events;
+    }
+    public String getUserFullName(){
+        return userFirst+" "+userLast;
+    }
+    public String getUsername() {
+        return username;
+    }
+
+    public ArrayList<Person> getPeople() {
+        return People;
+    }
+
+
+
+    public void refreshDataCache() { //I know I can create and call multiple instances but this seemed easier
+        eventLines = true;
         familyTreeLines = true;
         spouseLines = true;
         fathersSide = true;

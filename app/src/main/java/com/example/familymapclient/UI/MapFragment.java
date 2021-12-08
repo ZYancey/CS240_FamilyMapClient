@@ -1,8 +1,10 @@
 package com.example.familymapclient.UI;
 import com.example.familymapclient.R;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -16,8 +18,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,7 +32,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +43,10 @@ import Network.DataCache;
 import modelClass.Event;
 import modelClass.Person;
 import java.util.Comparator;
+import java.util.Locale;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
-    private final List<Polyline> polylines = new ArrayList<Polyline>();
+    private final List<Polyline> polylines = new ArrayList<>();
     public static final String ARG_TITLE = "title";
     private GoogleMap map;
     String eventID = null;
@@ -50,6 +55,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Iconify.with(new FontAwesomeModule());
+        assert getArguments() != null;
         eventID = getArguments().getString("EVENT");
         if (eventID == null) {
             setHasOptionsMenu(true);
@@ -57,39 +64,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
 
-
-    /*
-    @Override
-    public View onCreateView(@NonNull LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(layoutInflater, container, savedInstanceState);
-        View view = layoutInflater.inflate(R.layout.fragment_map, container, false);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        return view;
-    }
-*/
-
     @Override
     public View onCreateView(@NonNull LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(layoutInflater, container, savedInstanceState);
         view = layoutInflater.inflate(R.layout.fragment_map, container, false);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
-        TextView textview = (TextView) view.findViewById(R.id.mapTextView);
+        TextView textview = view.findViewById(R.id.mapTextView);
 
 
         return view;
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
         super.onCreateOptionsMenu(menu,menuInflater);
         menuInflater.inflate(R.menu.main_menu, menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem menu) {
         switch(menu.getItemId()) {
@@ -106,32 +101,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             default:
                 return super.onOptionsItemSelected(menu);
         }
-
-        //return super.onOptionsItemSelected(menu); //REMOVE ME AFTER UNCOMMENTING
     }
 
-    /*
 
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-        map.setOnMapLoadedCallback(this);
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
-
- */
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
         DataCache data = DataCache.getInstance();
         ArrayList<String> eventstypes = new ArrayList<>();
         ArrayList<Float> colors = new ArrayList<>();
-        ArrayList<Event> events = new ArrayList<>();
+        ArrayList<Event> events;
         events = data.getUserEvents();
         if (data.getFathersSide()){
             events.addAll(data.setFatherEvents());
@@ -156,41 +137,43 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
         data.setEvents(events);
 
+
         // Add a marker in Sydney and move the camera
         for (Event e : data.getEvents()) {
-            LatLng sydney = new LatLng(e.getLatitude(), e.getLongitude());
-            Marker m = null;
+            LatLng start_point = new LatLng(e.getLatitude(), e.getLongitude());
+            Marker m;
             int check = -1;
             for (int i = 0; i < eventstypes.size(); ++i) {
-                if (e.getEventType().equals(eventstypes.get(i))){
+                if (e.getEventType().toUpperCase(Locale.ROOT).equals(eventstypes.get(i))){
                     check = i;
                 }
             }
             if (check == -1) {
-                eventstypes.add(e.getEventType());
-                Float color = (float)colors.size() * 60;
+                eventstypes.add(e.getEventType().toUpperCase(Locale.ROOT));
+                float color = (float)colors.size() * 60;
                 while (color >= 360){
                     color = color / 2;
                 }
-                m = map.addMarker(new MarkerOptions().position(sydney).title(e.getEventID()).icon(BitmapDescriptorFactory
+                m = map.addMarker(new MarkerOptions().position(start_point).title(e.getEventID()).icon(BitmapDescriptorFactory
                         .defaultMarker(color)));
                 colors.add(color);
             }
             else {
-                m = map.addMarker(new MarkerOptions().position(sydney).title(e.getEventID()).icon(BitmapDescriptorFactory
+                m = map.addMarker(new MarkerOptions().position(start_point).title(e.getEventID()).icon(BitmapDescriptorFactory
                         .defaultMarker(colors.get(check))));
             }
+            assert m != null;
             m.setTag(e);
             //Life Story Line
 
             //Family Tree Line
             if (events.contains(data.getUserEvents().get(0))) {
-                sydney = new LatLng(data.getUserEvents().get(0).getLatitude(), data.getUserEvents().get(0).getLongitude());
-                map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
+                start_point = new LatLng(data.getUserEvents().get(0).getLatitude(), data.getUserEvents().get(0).getLongitude());
+                map.animateCamera(CameraUpdateFactory.newLatLng(start_point));
             }
             else {
-                sydney = new LatLng(events.get(0).getLatitude(), events.get(0).getLongitude());
-                map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
+                start_point = new LatLng(events.get(0).getLatitude(), events.get(0).getLongitude());
+                map.animateCamera(CameraUpdateFactory.newLatLng(start_point));
             }
 
             e = null;
@@ -202,48 +185,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             if (e != null){
                 LatLng event = new LatLng(e.getLatitude(), e.getLongitude());
                 map.animateCamera(CameraUpdateFactory.newLatLng(event));
-                TextView textview = (TextView) view.findViewById(R.id.mapTextView);
+                TextView textview = view.findViewById(R.id.mapTextView);
                 Person g = null;
                 for (Person p :data.getPeople()) {
                     if (p.getPersonID().equals(e.getPersonID())){
                         g = p;
                     }
                 }
-                textview.setText(g.getFirstName() + " " + g.getLastName() + "\n" + e.getEventType() + ": " + e.getCity() + ", " + e.getCountry() + ", " + e.getYear() );
-            }
-        }
-
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public boolean onMarkerClick(Marker m) {
                 for(Polyline line : polylines) {
                     line.remove();
                 }
                 polylines.clear();
-                TextView textview = (TextView) view.findViewById(R.id.mapTextView);
-                Event e = (Event) m.getTag();
-                Person g = null;
-                for (Person p :data.getPeople()) {
-                    if (p.getPersonID().equals(e.getPersonID())){
-                        g = p;
-                    }
-                }
-                if (g != null) {
-                    textview.setText(g.getFirstName() + " " + g.getLastName() + "\n" + e.getEventType() + ": " + e.getCity() + ", " + e.getCountry() + ", " + e.getYear() );
-                    Person finalG = g;
-                    LatLng sydney = new LatLng(e.getLatitude(), e.getLongitude());
-                    map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
-                    textview.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //TODO UNCOMMENT ME
-                            Intent intent = new Intent(getContext(), PersonActivity.class);
-                            intent.putExtra("THIS_PERSON", finalG.getPersonID());
-                            startActivity(intent);
-                        }
-                    });
-                }
+
                 if (data.getSpouseLines()) {
                     //Spouse Line
                     if (g != null && (g.getSpouseID() != null)){
@@ -252,21 +205,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                         for (Person p : data.getPeople()) {
                             if (g.getSpouseID().equals(p.getPersonID())) {
                                 s = p;
-                            } else {
-                                //s = g;
                             }
                         }
                         Event j = null;
-                        ArrayList<Event> events = new ArrayList<>();
+                        ArrayList<Event> lineEvents = new ArrayList<>();
 
                         if (s != null) { //As long as person has a spouse draw lines otherwise assume its null
                             for (Event f : data.getEvents()) {
                                 if (f.getPersonID().equals(s.getPersonID())) {
-                                    events.add(f);
+                                    lineEvents.add(f);
                                 }
                             }
 
-                            for (Event d : events) {
+                            for (Event d : lineEvents) {
                                 if (j == null) {
                                     j = d;
                                 }
@@ -283,44 +234,196 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                                 polylines.add(p);
                             }
-                            events.clear();
+                            lineEvents.clear();
                         }
                     }
                 }
-                if (g != null && data.getLifeStoryLines()) {
+                if (g != null && data.getEventLines()) {
                     //Life Story Lines
-                    Event j = null;
-                    ArrayList<Event> events = new ArrayList<>();
+                    ArrayList<Event> lineEvents2 = new ArrayList<>();
                     for (Event f : data.getEvents()) {
 
                         if (f.getPersonID().equals(g.getPersonID())) {
-                            events.add(f);
+                            lineEvents2.add(f);
                         }
                     }
-                    Comparator<Event> EventSorter = new Comparator<Event>() {
-                        @Override
-                        public int compare(Event o1, Event o2) {
-                            return Integer.compare(o1.getYear(), o2.getYear());
-                        }
-                    };
-                    events.sort(EventSorter);
-                    for (int i = 0; i < events.size() - 1; ++i) {
-                        LatLng current = new LatLng(events.get(i).getLatitude(), events.get(i).getLongitude());
-                        LatLng next = new LatLng(events.get(i + 1).getLatitude(), events.get(i + 1).getLongitude());
+                    Comparator<Event> EventSorter = Comparator.comparingInt(Event::getYear);
+                    lineEvents2.sort(EventSorter);
+                    for (int i = 0; i < lineEvents2.size() - 1; ++i) {
+                        LatLng current = new LatLng(lineEvents2.get(i).getLatitude(), lineEvents2.get(i).getLongitude());
+                        LatLng next = new LatLng(lineEvents2.get(i + 1).getLatitude(), lineEvents2.get(i + 1).getLongitude());
                         Polyline p = map.addPolyline(new PolylineOptions()
                                 .add(current, next)
                                 .width(8)
                                 .color(Color.YELLOW));
                         polylines.add(p);
                     }
-                    events.clear();
+                    lineEvents2.clear();
                 }
-                if (data.getFamilyTreeLines()) {
-                    //family tree lines
-                    familyTreeLineHelper(g, e, 16);
+
+
+                ImageView genderImageView = requireView().findViewById(R.id.genderImage);
+                Drawable genderIcon;
+                assert g != null;
+                String gender = g.getGender().toUpperCase();
+
+                switch (gender) {
+                    case "M":
+                        genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male)
+                                .colorRes(R.color.black)
+                                .sizeDp(40);
+                        genderImageView.setImageDrawable(genderIcon);
+                        break;
+                    case "F":
+                        genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female)
+                                .colorRes(R.color.black)
+                                .sizeDp(40);
+                        genderImageView.setImageDrawable(genderIcon);
+                        break;
                 }
-                return true;
+
+
+                textview.setText(new StringBuilder().append(g.getFirstName())
+                                                    .append(" ")
+                                                    .append(g.getLastName())
+                                                    .append("\n")
+                                                    .append(e.getEventType())
+                                                    .append(": ")
+                                                    .append(e.getCity())
+                                                    .append(", ")
+                                                    .append(e.getCountry())
+                                                    .append(", ")
+                                                    .append(e.getYear()).toString());
             }
+        }
+
+        map.setOnMarkerClickListener(m -> {
+            for(Polyline line : polylines) {
+                line.remove();
+            }
+            polylines.clear();
+            TextView textview = view.findViewById(R.id.mapTextView);
+            Event e = (Event) m.getTag();
+            Person g = null;
+            for (Person p :data.getPeople()) {
+                assert e != null;
+                if (p.getPersonID().equals(e.getPersonID())){
+                    g = p;
+                }
+            }
+            if (g != null) {
+
+                String gender = g.getGender();
+                ImageView genderImageView = requireView().findViewById(R.id.genderImage);
+                Drawable genderIcon;
+                gender = gender.toUpperCase();
+
+                switch (gender) {
+                    case "M":
+                        genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_male)
+                                .colorRes(R.color.black)
+                                .sizeDp(40);
+                        genderImageView.setImageDrawable(genderIcon);
+                        break;
+                    case "F":
+                        genderIcon = new IconDrawable(getActivity(), FontAwesomeIcons.fa_female)
+                                .colorRes(R.color.black)
+                                .sizeDp(40);
+                        genderImageView.setImageDrawable(genderIcon);
+                        break;
+                }
+
+                e.setEventType(e.getEventType().toUpperCase(Locale.ROOT));
+
+                textview.setText(new StringBuilder().append(g.getFirstName())
+                                                    .append(" ")
+                                                    .append(g.getLastName())
+                                                    .append("\n")
+                                                    .append(e.getEventType())
+                                                    .append(": ")
+                                                    .append(e.getCity())
+                                                    .append(", ")
+                                                    .append(e.getCountry())
+                                                    .append(", ")
+                                                    .append(e.getYear()).toString());
+
+                Person finalG = g;
+                LatLng sydney = new LatLng(e.getLatitude(), e.getLongitude());
+                map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
+                textview.setOnClickListener(v -> {
+                    Intent intent = new Intent(getContext(), PersonActivity.class);
+                    intent.putExtra("THIS_PERSON", finalG.getPersonID());
+                    startActivity(intent);
+                });
+            }
+            if (data.getSpouseLines()) {
+                //Spouse Line
+                if (g != null && (g.getSpouseID() != null)){
+                    LatLng sydney = new LatLng(e.getLatitude(), e.getLongitude());
+                    Person s = null;
+                    for (Person p : data.getPeople()) {
+                        if (g.getSpouseID().equals(p.getPersonID())) {
+                            s = p;
+                        }
+                    }
+                    Event j = null;
+                    ArrayList<Event> events1 = new ArrayList<>();
+
+                    if (s != null) { //As long as person has a spouse draw lines otherwise assume its null
+                        for (Event f : data.getEvents()) {
+                            if (f.getPersonID().equals(s.getPersonID())) {
+                                events1.add(f);
+                            }
+                        }
+
+                        for (Event d : events1) {
+                            if (j == null) {
+                                j = d;
+                            }
+                            if (j.getYear() > d.getYear()) {
+                                j = d;
+                            }
+                        }
+                        if (j != null) {
+                            LatLng spouse = new LatLng(j.getLatitude(), j.getLongitude());
+                            Polyline p = map.addPolyline(new PolylineOptions()
+                                    .add(sydney, spouse)
+                                    .width(10)
+                                    .color(Color.BLACK));
+
+                            polylines.add(p);
+                        }
+                        events1.clear();
+                    }
+                }
+            }
+            if (g != null && data.getEventLines()) {
+                //Life Story Lines
+                ArrayList<Event> events1 = new ArrayList<>();
+                for (Event f : data.getEvents()) {
+
+                    if (f.getPersonID().equals(g.getPersonID())) {
+                        events1.add(f);
+                    }
+                }
+                Comparator<Event> EventSorter = Comparator.comparingInt(Event::getYear);
+                events1.sort(EventSorter);
+                for (int i = 0; i < events1.size() - 1; ++i) {
+                    LatLng current = new LatLng(events1.get(i).getLatitude(), events1.get(i).getLongitude());
+                    LatLng next = new LatLng(events1.get(i + 1).getLatitude(), events1.get(i + 1).getLongitude());
+                    Polyline p = map.addPolyline(new PolylineOptions()
+                            .add(current, next)
+                            .width(8)
+                            .color(Color.YELLOW));
+                    polylines.add(p);
+                }
+                events1.clear();
+            }
+            if (data.getFamilyTreeLines()) {
+                //family tree lines
+                familyTreeLineHelper(g, e, 16);
+            }
+            return true;
         });
     }
 
@@ -362,12 +465,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     }
                 }
                 if (j == null) {
-                    Comparator<Event> EventSorter = new Comparator<Event>() {
-                        @Override
-                        public int compare(Event o1, Event o2) {
-                            return Integer.compare(o1.getYear(), o2.getYear());
-                        }
-                    };
+                    Comparator<Event> EventSorter = Comparator.comparingInt(Event::getYear);
                     events.sort(EventSorter);
                     j = events.get(0);
                 }
@@ -403,12 +501,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
             if (events.size() > 0) {
                 if (j == null) {
-                    Comparator<Event> EventSorter = new Comparator<Event>() {
-                        @Override
-                        public int compare(Event o1, Event o2) {
-                            return Integer.compare(o1.getYear(), o2.getYear());
-                        }
-                    };
+                    Comparator<Event> EventSorter = Comparator.comparingInt(Event::getYear);
                     events.sort(EventSorter);
                     j = events.get(0);
                 }

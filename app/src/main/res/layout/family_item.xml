@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/FamilyTitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="8dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        tools:text="Father's Name" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/FamilyRelationship"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/FamilyTitle"
-        android:layout_marginStart="16dp"
-        tools:text="Father"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingRight="5dp"
+            android:id="@+id/iconField">
+        </ImageView>
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/FamilyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Events"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/FamilyRelationship"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="EventType"
+                android:textStyle="italic" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/darker_gray">
+    </View>
+</LinearLayout>

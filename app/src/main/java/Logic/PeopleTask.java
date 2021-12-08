@@ -11,9 +11,8 @@ import java.util.List;
 
 import Network.DataCache;
 import Network.ServerProxy;
-import modelClass.Event;
 import modelClass.Person;
-import request.LoginRequest;
+
 
 import result.PersonResult;
 
@@ -63,12 +62,9 @@ public class PeopleTask extends AsyncTask<String, Integer, PersonResult> {
     @Override
     protected void onPostExecute(PersonResult result) {
         if (!result.getMessage().contains("val")) {
-            //Toast.makeText(mcontext, "Login Failed",Toast.LENGTH_LONG).show();
         }
         else {
             DataCache data = DataCache.getInstance();
-            //TODO FIX THIS FOR LOGIN
-
             Person[] R = result.getData();
 
             ArrayList<Person> list1 = new ArrayList<Person>();

@@ -6,211 +6,259 @@
     android:stretchColumns="3"
     android:layout_margin="16dp"
     tools:context=".UI.SettingsActivity">
-  <TableRow>
-      <TextView
-      android:layout_height="wrap_content"
-      android:layout_width="wrap_content"
-      
-      android:text="@string/LifeStoryLines"/>
 
-    <Switch
-        android:id="@+id/switchLifeStoryLines"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:switchMinWidth="56dp"
-        android:layout_marginLeft="100dp"
-        android:checked="true" />
-  </TableRow>
-    <TableRow>
+    <TableRow android:layout_height="wrap_content">
+
         <TextView
+            android:layout_width="192dp"
             android:layout_height="wrap_content"
+
+            android:text="@string/LifeStoryLines"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/switchLifeStoryLines"
             android:layout_width="wrap_content"
-            
-            android:text="@string/LifeStoryLinesExplanation"/>
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:switchMinWidth="60dp"
+            android:textAlignment="textStart" />
+    </TableRow>
+    <TableRow>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@string/LifeStoryLinesExplanation"
+            android:textStyle="italic" />
 
   </TableRow>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            
-            android:text="@string/FamilyTreeLines"/>
+            android:layout_height="wrap_content"
+
+            android:text="@string/FamilyTreeLines"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/switchFamilyTreeLines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:switchMinWidth="56dp"
-            android:layout_marginLeft="100dp"
-            android:checked="true" />
+            android:checked="true"
+            android:switchMinWidth="60dp" />
 </TableRow>
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            
-            android:text="@string/FamilyTreeLinesExplanation"/>
+            android:layout_height="wrap_content"
+
+            android:text="@string/FamilyTreeLinesExplanation"
+            android:textStyle="italic" />
 
     </TableRow>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            
-            android:text="@string/SpouseLines"/>
+            android:layout_height="wrap_content"
+
+            android:text="@string/SpouseLines"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/switchSpouseLines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:switchMinWidth="56dp"
-            android:layout_marginLeft="100dp"
-            android:checked="true" />
+            android:checked="true"
+            android:switchMinWidth="60dp" />
     </TableRow>
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            
-            android:text="@string/SpouseLinesExplanation"/>
+            android:layout_height="wrap_content"
+
+            android:text="@string/SpouseLinesExplanation"
+            android:textStyle="italic" />
 
     </TableRow>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/FathersSide"/>
+            android:layout_height="wrap_content"
+            android:text="@string/FathersSide"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/switchFathersSide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:switchMinWidth="56dp"
-            android:layout_marginLeft="100dp"
-            android:checked="true" />
+            android:checked="true"
+            android:switchMinWidth="60dp" />
     </TableRow>
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/FathersSideExplanation"/>
+            android:layout_height="wrap_content"
+            android:text="@string/FathersSideExplanation"
+            android:textStyle="italic" />
 
     </TableRow>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/MothersSide"/>
+            android:layout_height="wrap_content"
+            android:text="@string/MothersSide"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/switchMothersSide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:switchMinWidth="56dp"
-            android:layout_marginLeft="100dp"
-            android:checked="true" />
+            android:checked="true"
+            android:switchMinWidth="60dp" />
     </TableRow>
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            
-            android:text="@string/MothersSideExplanation"/>
+            android:layout_height="wrap_content"
+
+            android:text="@string/MothersSideExplanation"
+            android:textStyle="italic" />
 
     </TableRow>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            
-            android:text="@string/MaleEvents"/>
+            android:layout_height="wrap_content"
+
+            android:text="@string/MaleEvents"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/switchMaleEvents"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:switchMinWidth="56dp"
-            android:layout_marginLeft="100dp"
-            android:checked="true" />
+            android:checked="true"
+            android:switchMinWidth="60dp" />
     </TableRow>
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            
-            android:text="@string/GenderEventsExplanation"/>
+            android:layout_height="wrap_content"
+
+            android:text="@string/GenderEventsExplanation"
+            android:textStyle="italic" />
 
     </TableRow>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            
-            android:text="@string/FemaleEvents"/>
+            android:layout_height="wrap_content"
+
+            android:text="@string/FemaleEvents"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/switchFemaleEvents"
-            android:layout_width="wrap_content"
+            android:layout_width="81dp"
             android:layout_height="wrap_content"
-            android:switchMinWidth="56dp"
-            android:layout_marginLeft="100dp"
-            android:checked="true" />
+            android:checked="true"
+            android:switchMinWidth="60dp"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
     </TableRow>
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            
-            android:text="@string/GenderEventsExplanation"/>
+            android:layout_height="wrap_content"
+
+            android:text="@string/GenderEventsExplanation"
+            android:textStyle="italic" />
 
     </TableRow>
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
+        android:layout_height="309dp"
+        android:background="@android:color/white" />
 
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:id="@+id/Logout"
-            android:text="@string/Logout"/>
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Logout"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
     </TableRow>
     <TableRow>
+
         <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:id="@+id/Logout1"
-            android:text="@string/LogoutExplanation"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/LogoutExplanation"
+            android:textAlignment="center"
+            android:textStyle="italic" />
 
     </TableRow>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
 </TableLayout>

@@ -16,17 +16,20 @@
             android:layout_height="match_parent"
             android:gravity="end"
             android:text="@string/PersonName"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
 
     </TableRow>
     <TableRow>
+
         <TextView
             android:id="@+id/FirstName"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="end"
-            android:text="@string/PersonNameBox"/>
+            android:text="@string/PersonNameBox"
+            android:textStyle="italic" />
 
     </TableRow>
     <View
@@ -34,42 +37,50 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray" />
     <TableRow>
+
         <TextView
             android:id="@+id/LastName"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="end"
             android:text="@string/PersonLastName"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </TableRow>
     <TableRow>
+
         <TextView
             android:id="@+id/LastNameBox"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="end"
-            android:text="@string/PersonLastNameBox"/>
+            android:text="@string/PersonLastNameBox"
+            android:textStyle="italic" />
     </TableRow>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray" />
     <TableRow>
+
         <TextView
             android:id="@+id/Gender"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="end"
             android:text="@string/PersonGender"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </TableRow>
     <TableRow>
+
         <TextView
             android:id="@+id/GenderBox"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="end"
-            android:text="@string/PersonGenderBox"/>
+            android:text="@string/PersonGenderBox"
+            android:textStyle="italic" />
     </TableRow>
     <View
         android:layout_width="match_parent"

@@ -11,23 +11,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.familymapclient.R;
 
-import Network.DataCache;
-
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 public class MainActivity extends AppCompatActivity {
     private static MainActivity instance = null;
-    private final int REQ_CODE_ORDER_INFO = 1;
 
     public static MainActivity getInstance() {
         return instance;
-    }
-
-    public static void setInstance(MainActivity instance) {
-        MainActivity.instance = instance;
     }
 
     public void switchToMap(String userName){

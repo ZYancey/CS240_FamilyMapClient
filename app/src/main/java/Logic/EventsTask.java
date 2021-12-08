@@ -2,7 +2,6 @@ package Logic;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,8 +11,6 @@ import java.util.List;
 import Network.DataCache;
 import Network.ServerProxy;
 import modelClass.Event;
-import modelClass.Person;
-import request.LoginRequest;
 
 import result.EventResult;
 
@@ -64,11 +61,9 @@ public class EventsTask extends AsyncTask<String, Integer, EventResult> {
     @Override
     protected void onPostExecute(EventResult result) {
         if (!result.getMessage().contains("val")) {
-            //ttToast.makeText(mcontext, "Login Failed",Toast.LENGTH_LONG).show();
         }
         else {
             DataCache data = DataCache.getInstance();
-            //TODO FIX THIS FOR LOGIN
             Event[] R = result.getData();
 
             ArrayList<Event> list1 = new ArrayList<Event>();

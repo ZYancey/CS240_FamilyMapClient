@@ -7,12 +7,12 @@
     <string name="FamilyTreeLinesExplanation">Show Family Tree Lines</string>
     <string name="SpouseLines">Spouse Lines</string>
     <string name="SpouseLinesExplanation">Show Spouse Lines</string>
-    <string name="GenderEventsExplanation">Filter Events Based on Gender</string>
+    <string name="GenderEventsExplanation">Show Events of the Above Gender</string>
     <string name="FemaleEvents">Female Events</string>
     <string name="MaleEvents">Male Events</string>
-    <string name="MothersSideExplanation">Filter by Mother\'s Side of Family</string>
+    <string name="MothersSideExplanation">Show Mother\'s Side of Family</string>
     <string name="MothersSide">Mother\'s Side</string>
-    <string name="FathersSideExplanation">Filter by Father\'s Side of Family</string>
+    <string name="FathersSideExplanation">Show Father\'s Side of Family</string>
     <string name="FathersSide">Father\'s Side</string>
     <string name="settings">Settings</string>
     <string name="Logout">Logout</string>

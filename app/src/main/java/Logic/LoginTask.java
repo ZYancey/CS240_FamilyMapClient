@@ -72,12 +72,9 @@ public class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
         }
         else {
             DataCache data = DataCache.getInstance();
-            String FN = data.getUserFirstandLast();
-            //String LN = data.getUser().getLastName();
+            String FN = data.getUserFullName();
             Toast.makeText(mcontext, FN, Toast.LENGTH_LONG).show();
 
-            //AuthToken authToken = new AuthToken(result.getUserName(),result.getAuthToken());
-            //data.setAuthToken(authToken);
 
 
             PeopleTask task = new PeopleTask(mcontext);

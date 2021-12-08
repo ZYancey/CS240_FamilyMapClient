@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -12,15 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import Network.DataCache;
 import modelClass.Event;
 import modelClass.Person;
+
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
+
+
+
 
 public class PersonActivity extends AppCompatActivity {
     DataCache data = DataCache.getInstance();
@@ -30,6 +41,9 @@ public class PersonActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
+
+        Iconify.with(new FontAwesomeModule());
+
         String personID = getIntent().getStringExtra("THIS_PERSON");
         ArrayList<Person> people = data.getPeople();
 
@@ -39,12 +53,12 @@ public class PersonActivity extends AppCompatActivity {
             }
         }
         if (person != null){
-            TextView textview = (TextView) findViewById(R.id.Name);
+            TextView textview = findViewById(R.id.Name);
             textview.setText(person.getFirstName());
-            textview = (TextView) findViewById(R.id.LastName);
+            textview = findViewById(R.id.LastName);
             textview.setText(person.getLastName());
-            textview = (TextView) findViewById(R.id.Gender);
-            textview.setText(person.getGender());
+            textview = findViewById(R.id.Gender);
+            textview.setText(person.getGender().toUpperCase(Locale.ROOT));
             ExpandableListView expandableListView = findViewById(R.id.expandableListView);
             ArrayList<Event> Events = data.getEvents();
             ArrayList<Event> events = new ArrayList<>();
@@ -55,12 +69,7 @@ public class PersonActivity extends AppCompatActivity {
                     events.add(e);
                 }
             }
-            Comparator<Event> EventSorter = new Comparator<Event>() {
-                @Override
-                public int compare(Event o1, Event o2) {
-                    return Integer.compare(o1.getYear(),o2.getYear());
-                }
-            };
+            Comparator<Event> EventSorter = Comparator.comparingInt(Event::getYear);
             events.sort(EventSorter);
             for (Person p: people) {
                 if (p.getPersonID().equals(person.getFatherID())) {
@@ -89,12 +98,6 @@ public class PersonActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home)  {
-            /*
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);*/
-
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("REFRESH", "REFRESH");
             startActivity(intent);
@@ -215,10 +218,14 @@ public class PersonActivity extends AppCompatActivity {
 
         private void initializeFamilyView(View FamilyItemView, final int childPosition) {
             TextView FamilyView = FamilyItemView.findViewById(R.id.FamilyTitle);
-            FamilyView.setText(people.get(childPosition).getFirstName() + " " + people.get(childPosition).getLastName());
+
+            FamilyView.setText(new StringBuilder().append(people.get(childPosition).getFirstName())
+                    .append(" ")
+                    .append(people.get(childPosition).getLastName()).toString());
 
             TextView FamilyRelationshipView = FamilyItemView.findViewById(R.id.FamilyRelationship);
             String RelationshipType = "";
+
             if (people.get(childPosition).getPersonID().equals(person.getFatherID())){
                 RelationshipType = "Father";
             }
@@ -235,34 +242,67 @@ public class PersonActivity extends AppCompatActivity {
             }
             FamilyRelationshipView.setText(RelationshipType);
 
-            FamilyItemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(PersonActivity.this, PersonActivity.class);
-                    intent.putExtra("THIS_PERSON", people.get(childPosition).getPersonID());
-                    startActivity(intent);
-                }
+            ImageView familyImageView = FamilyItemView.findViewById(R.id.iconField);
+            Drawable genderIcon;
+
+            if (people.get(childPosition).getGender().toUpperCase(Locale.ROOT).equals("M")){
+                genderIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_male)
+                        .colorRes(R.color.black)
+                        .sizeDp(40);
+                familyImageView.setImageDrawable(genderIcon);
+            }else{
+                genderIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_female)
+                        .colorRes(R.color.black)
+                        .sizeDp(40);
+                familyImageView.setImageDrawable(genderIcon);
+            }
+
+
+
+
+
+            FamilyItemView.setOnClickListener(v -> {
+                Intent intent = new Intent(PersonActivity.this, PersonActivity.class);
+                intent.putExtra("THIS_PERSON", people.get(childPosition).getPersonID());
+                startActivity(intent);
             });
 
         }
 
         private void initializeEventView(View EventItemView, final int childPosition) {
+
+            ImageView eventImageView = EventItemView.findViewById(R.id.iconField);
+            Drawable eventIcon;
+
+
+            eventIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_map_marker)
+                            .colorRes(R.color.black)
+                            .sizeDp(40);
+            eventImageView.setImageDrawable(eventIcon);
+
+
+
             TextView EventIDView = EventItemView.findViewById(R.id.EventsTitle);
-            EventIDView.setText(events.get(childPosition).getEventType() + ": " +
-                    events.get(childPosition).getCity() + ", " + events.get(childPosition).getCountry()
-                    + " (" + events.get(childPosition).getYear() + ")");
+            EventIDView.setText(new StringBuilder().append(events.get(childPosition).getEventType().toUpperCase(Locale.ROOT))
+                    .append(": ")
+                    .append(events.get(childPosition).getCity())
+                    .append(", ")
+                    .append(events.get(childPosition).getCountry())
+                    .append(" (")
+                    .append(events.get(childPosition).getYear())
+                    .append(")").toString());
+
+
             TextView EventTypeView = EventItemView.findViewById(R.id.EventsType);
-            EventTypeView.setText(person.getFirstName() + " " + person.getLastName());
-            EventItemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(PersonActivity.this, EventActivity.class);
-                    intent.putExtra("THIS_EVENT", events.get(childPosition).getEventID());
-                    finish();
-                    startActivity(intent);                }
-            });
 
-
+            EventTypeView.setText(new StringBuilder().append(person.getFirstName())
+                    .append(" ")
+                    .append(person.getLastName()).toString());
+            EventItemView.setOnClickListener(v -> {
+                Intent intent = new Intent(PersonActivity.this, EventActivity.class);
+                intent.putExtra("THIS_EVENT", events.get(childPosition).getEventID());
+                finish();
+                startActivity(intent);});
         }
 
 

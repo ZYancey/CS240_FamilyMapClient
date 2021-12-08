@@ -1,21 +1,27 @@
 package com.example.familymapclient.UI;
 import com.example.familymapclient.R;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import Network.DataCache;
 import modelClass.Event;
@@ -53,12 +59,11 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//              if (searchView.isExpanded() && TextUtils.isEmpty(newText)) {
                 callSearch(newText);
-//              }
                 return true;
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             public void callSearch(String query) {
                 query = query.toLowerCase();
                 events.clear();
@@ -93,13 +98,6 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home)  {
-            /*
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-
-             */
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("REFRESH", "REFRESH");
             startActivity(intent);
@@ -172,16 +170,44 @@ public class SearchActivity extends AppCompatActivity {
                 location = itemView.findViewById(R.id.EventPerson);
 
             }
+
         }
 
         private void bind(Person Person) {
             this.Person = Person;
-            name.setText(Person.getFirstName() + " " + Person.getLastName());
+            name.setText(new StringBuilder().append(Person.getFirstName())
+                    .append(" ")
+                    .append(Person.getLastName()).toString());
+
+            ImageView searchpersonImageView = itemView.findViewById(R.id.iconField);
+            Drawable genderIcon;
+
+            if (Person.getGender().toUpperCase(Locale.ROOT).equals("M")){
+                genderIcon = new IconDrawable(SearchActivity.this, FontAwesomeIcons.fa_male)
+                        .colorRes(R.color.black)
+                        .sizeDp(40);
+                searchpersonImageView.setImageDrawable(genderIcon);
+            }else{
+                genderIcon = new IconDrawable(SearchActivity.this, FontAwesomeIcons.fa_female)
+                        .colorRes(R.color.black)
+                        .sizeDp(40);
+                searchpersonImageView.setImageDrawable(genderIcon);
+            }
+
+
         }
 
         private void bind(Event Event) {
             this.Event = Event;
-            name.setText(Event.getEventType() + ": " + Event.getCity() + ", " + Event.getCountry() + " (" + Event.getYear() + ")");
+            name.setText(new StringBuilder().append(Event.getEventType().toUpperCase(Locale.ROOT))
+                    .append(": ")
+                    .append(Event.getCity())
+                    .append(", ")
+                    .append(Event.getCountry())
+                    .append(" (")
+                    .append(Event.getYear())
+                    .append(")").toString());
+
             DataCache data = DataCache.getInstance();
             ArrayList<Person> People = data.getPeople();
             Person person = null;
@@ -190,7 +216,18 @@ public class SearchActivity extends AppCompatActivity {
                     person = p;
                 }
             }
-            location.setText(person.getFirstName() + " " + person.getLastName());
+            assert person != null;
+            location.setText(new StringBuilder().append(person.getFirstName())
+                    .append(" ")
+                    .append(person.getLastName()).toString());
+
+            ImageView searchEventImageView = itemView.findViewById(R.id.iconField);
+            Drawable eventIcon;
+                eventIcon = new IconDrawable(SearchActivity.this, FontAwesomeIcons.fa_map_marker)
+                        .colorRes(R.color.black)
+                        .sizeDp(40);
+                searchEventImageView.setImageDrawable(eventIcon);
+
         }
 
         @Override

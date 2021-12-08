@@ -8,14 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.UUID;
-
 import Network.DataCache;
-import modelClass.Event;
 
 public class EventActivity extends AppCompatActivity {
 
@@ -38,12 +31,6 @@ public class EventActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home)  {
-            /*
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);*/
-
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("REFRESH", "REFRESH");
             startActivity(intent);

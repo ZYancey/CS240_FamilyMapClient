@@ -31,7 +31,6 @@ public class LoginFragment extends Fragment {
 
     private static final String LOG_TAG = "Login_Fragment";
 
-    private String title;
     private EditText serverHostEditText;
     private EditText serverPortEditText;
     private EditText firstNameEditText;
@@ -39,8 +38,6 @@ public class LoginFragment extends Fragment {
     private EditText passwordEditText;
     private EditText emailEditText;
     private EditText userNameText;
-    private Button reg;
-    private Button login;
     RadioGroup radioGender;
 
     public LoginFragment() {
@@ -52,7 +49,7 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            title = getArguments().getString(ARG_TITLE);
+            String title = getArguments().getString(ARG_TITLE);
         }
 
     }
@@ -60,30 +57,26 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.login_fragment, parent, false);
-        serverHostEditText = view.findViewById(R.id.ServerIP);
-        serverPortEditText = view.findViewById(R.id.ServerPort);
-        firstNameEditText = view.findViewById(R.id.FirstName);
-        lastNameEditText = view.findViewById(R.id.LastName);
-        passwordEditText = view.findViewById(R.id.Password);
-        emailEditText = view.findViewById(R.id.Email);
-        userNameText = view.findViewById(R.id.Username);
-        radioGender=(RadioGroup)view.findViewById(R.id.RadioGroup);
+        serverHostEditText  = view.findViewById(R.id.ServerIP);
+        serverPortEditText  = view.findViewById(R.id.ServerPort);
+        firstNameEditText   = view.findViewById(R.id.FirstName);
+        lastNameEditText    = view.findViewById(R.id.LastName);
+        passwordEditText    = view.findViewById(R.id.Password);
+        emailEditText       = view.findViewById(R.id.Email);
+        userNameText        = view.findViewById(R.id.Username);
+        radioGender         = view.findViewById(R.id.RadioGroup);
+
         final String[] gender = {"m"};
-        radioGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioGender.setOnCheckedChangeListener((group, checkedId) -> {
+            int childCount = group.getChildCount();
 
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // TODO Auto-generated method stub
-                int childCount = group.getChildCount();
-
-                for (int x = 0; x < childCount; x++) {
-                    RadioButton btn = (RadioButton) group.getChildAt(x);
-                    if (btn.getId() == checkedId) {
-                        gender[0] = btn.getText().toString();// here gender will contain M or F.
-                    }
+            for (int x = 0; x < childCount; x++) {
+                RadioButton btn = (RadioButton) group.getChildAt(x);
+                if (btn.getId() == checkedId) {
+                    gender[0] = btn.getText().toString();// here gender will contain M or F.
                 }
-                Log.e("Gender", gender[0]);
             }
+            Log.e("Gender", gender[0]);
         });
         Button loginButton = view.findViewById(R.id.buttonLogin);
         loginButton.setEnabled(false);
@@ -111,18 +104,13 @@ public class LoginFragment extends Fragment {
         serverPortEditText.addTextChangedListener(watcher);
         passwordEditText.addTextChangedListener(watcher);
         userNameText.addTextChangedListener(watcher);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DataCache data = DataCache.getInstance();
-                data.setServerHost(serverHostEditText.getText().toString());
-                data.setServerPort(serverPortEditText.getText().toString());
-                LoginRequest l = new LoginRequest(userNameText.getText().toString(),passwordEditText.getText().toString());
-                //-l.setPassword(passwordEditText.getText().toString());
-                //-l.setUsername(userNameText.getText().toString());
-                LoginTask task = new LoginTask(getActivity());
-                task.execute(l);
-            }
+        loginButton.setOnClickListener(v -> {
+            DataCache data = DataCache.getInstance();
+            data.setFMSHost(serverHostEditText.getText().toString());
+            data.setFMSPort(serverPortEditText.getText().toString());
+            LoginRequest l = new LoginRequest(userNameText.getText().toString(),passwordEditText.getText().toString());
+            LoginTask task = new LoginTask(getActivity());
+            task.execute(l);
         });
         Button registerButton = view.findViewById(R.id.buttonRegister);
         registerButton.setEnabled(false);
@@ -157,30 +145,27 @@ public class LoginFragment extends Fragment {
         firstNameEditText.addTextChangedListener(watcher2);
         lastNameEditText.addTextChangedListener(watcher2);
         emailEditText.addTextChangedListener(watcher2);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ////TODO THIS IS BROKEN AND IS ASSIGNING THE WRONG GENDER
-                String finalGender = gender[0];
-                if (finalGender.equals("m")){
-                    finalGender = "m";
-                }
-                else {
-                    finalGender = "f";
-                }
-                DataCache data = DataCache.getInstance();
-                data.setServerHost(serverHostEditText.getText().toString());
-                data.setServerPort(serverPortEditText.getText().toString());
-                data.setUserFirst(firstNameEditText.getText().toString());
-                data.setUserLast(lastNameEditText.getText().toString());
 
-                RegisterRequest l = new RegisterRequest(userNameText.getText().toString(),passwordEditText.getText().toString(),
-                        emailEditText.getText().toString(), firstNameEditText.getText().toString(),
-                        lastNameEditText.getText().toString(),finalGender, firstNameEditText.getText().toString() + lastNameEditText.getText().toString());
-
-                RegisterTask task = new RegisterTask(getActivity());
-                task.execute(l);
+        registerButton.setOnClickListener(v -> {
+            String finalGender = gender[0];
+            if (finalGender.equals("m")){
+                finalGender = "m";
             }
+            else {
+                finalGender = "f";
+            }
+            DataCache data = DataCache.getInstance();
+            data.setFMSHost(serverHostEditText.getText().toString());
+            data.setFMSPort(serverPortEditText.getText().toString());
+            data.setUserFirst(firstNameEditText.getText().toString());
+            data.setUserLast(lastNameEditText.getText().toString());
+
+            RegisterRequest l = new RegisterRequest(userNameText.getText().toString(),passwordEditText.getText().toString(),
+                    emailEditText.getText().toString(), firstNameEditText.getText().toString(),
+                    lastNameEditText.getText().toString(),finalGender, firstNameEditText.getText().toString() + lastNameEditText.getText().toString());
+
+            RegisterTask task = new RegisterTask(getActivity());
+            task.execute(l);
         });
         return view;
     }
