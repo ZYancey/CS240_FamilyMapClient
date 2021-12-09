@@ -15,7 +15,7 @@
             android:id="@+id/fillertextView"
             android:layout_width="400dp"
             android:layout_height="wrap_content"
-            android:text="Type your Search Query Below"
+            android:text="@string/type_your_search_query_below"
             android:textAlignment="center"
             android:textSize="16sp" />
 

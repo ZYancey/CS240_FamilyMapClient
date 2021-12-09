@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.familymapclient">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.FamilyMapClient">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -19,20 +20,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.240_FamilyMapClient"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m"
+        tools:ignore="AllowBackup">
 
         <activity
-            android:name=".UI.SettingsActivity"
-            android:parentActivityName=".UI.MainActivity" />
+            android:name="com.example.FamilyMapClient.UI.SettingsActivity"
+            android:parentActivityName="com.example.FamilyMapClient.UI.MainActivity" />
         <activity
-            android:name=".UI.SearchActivity"
-            android:parentActivityName=".UI.MainActivity" />
+            android:name="com.example.FamilyMapClient.UI.SearchActivity"
+            android:parentActivityName="com.example.FamilyMapClient.UI.MainActivity" />
         <activity
-            android:name=".UI.EventActivity"
-            android:parentActivityName=".UI.MainActivity" />
+            android:name="com.example.FamilyMapClient.UI.EventActivity"
+            android:parentActivityName="com.example.FamilyMapClient.UI.MainActivity" />
         <activity
-            android:name=".UI.PersonActivity"
-            android:parentActivityName=".UI.MainActivity" />
+            android:name="com.example.FamilyMapClient.UI.PersonActivity"
+            android:parentActivityName="com.example.FamilyMapClient.UI.MainActivity" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -47,7 +50,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".UI.MainActivity"
+            android:name="com.example.FamilyMapClient.UI.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

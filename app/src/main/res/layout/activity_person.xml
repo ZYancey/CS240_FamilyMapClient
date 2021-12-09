@@ -88,8 +88,6 @@
         android:background="@android:color/darker_gray" />
 
     <ExpandableListView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/expandableListView"
         android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
         android:dividerHeight="1dp"

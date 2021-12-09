@@ -1,6 +1,7 @@
 package Logic;
-import com.example.familymapclient.UI.MainActivity;
+import com.example.FamilyMapClient.UI.MainActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -17,11 +18,9 @@ import Network.DataCache;
 
 
 public class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
-    private Context mcontext;
-    interface LoginTaskListener {
-        void progressUpdated(int progress);
-        void taskCompleted(long result);
-    }
+    @SuppressLint("StaticFieldLeak")
+    private final Context mcontext;
+    interface LoginTaskListener {}
 
     public LoginTask(Context context){
         mcontext = context;
@@ -31,18 +30,6 @@ public class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
 
     void registerListener(LoginTaskListener listener) {
         listeners.add(listener);
-    }
-
-    private void fireProgressUpdate(int progress) {
-        for(LoginTaskListener listener : listeners) {
-            listener.progressUpdated(progress);
-        }
-    }
-
-    private void fireTaskCompleted(long result) {
-        for(LoginTaskListener listener : listeners) {
-            listener.taskCompleted(result);
-        }
     }
 
     @Override
@@ -74,7 +61,6 @@ public class LoginTask extends AsyncTask<LoginRequest, Integer, AuthResult>{
             DataCache data = DataCache.getInstance();
             String FN = data.getUserFullName();
             Toast.makeText(mcontext, FN, Toast.LENGTH_LONG).show();
-
 
 
             PeopleTask task = new PeopleTask(mcontext);

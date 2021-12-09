@@ -1,5 +1,5 @@
-package com.example.familymapclient.UI;
-import com.example.familymapclient.R;
+package com.example.FamilyMapClient.UI;
+import com.example.FamilyMapClient.R;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -46,11 +46,11 @@ import java.util.Comparator;
 import java.util.Locale;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
-    private final List<Polyline> polylines = new ArrayList<>();
+    private final List<Polyline> polylineList = new ArrayList<>();
     public static final String ARG_TITLE = "title";
-    private GoogleMap map;
+    private GoogleMap myMap;
     String eventID = null;
-    View view;
+    View myView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,15 +67,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public View onCreateView(@NonNull LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(layoutInflater, container, savedInstanceState);
-        view = layoutInflater.inflate(R.layout.fragment_map, container, false);
+        myView = layoutInflater.inflate(R.layout.map_fragment, container, false);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         assert mapFragment != null;
         mapFragment.getMapAsync(this);
-        TextView textview = view.findViewById(R.id.mapTextView);
-
-
-        return view;
+        myView.findViewById(R.id.mapTextView);
+        return myView;
     }
 
     @Override
@@ -89,12 +87,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public boolean onOptionsItemSelected(MenuItem menu) {
         switch(menu.getItemId()) {
             case R.id.searchItem:
-                map.clear();
+                myMap.clear();
                 Intent intent = new Intent(getContext(), SearchActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.settingsItem:
-                map.clear();
+                myMap.clear();
                 intent = new Intent(getContext(), SettingsActivity.class);
                 startActivity(intent);
                 return true;
@@ -108,7 +106,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        map = googleMap;
+        myMap = googleMap;
         DataCache data = DataCache.getInstance();
         ArrayList<String> eventstypes = new ArrayList<>();
         ArrayList<Float> colors = new ArrayList<>();
@@ -138,7 +136,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         data.setEvents(events);
 
 
-        // Add a marker in Sydney and move the camera
+
         for (Event e : data.getEvents()) {
             LatLng start_point = new LatLng(e.getLatitude(), e.getLongitude());
             Marker m;
@@ -154,27 +152,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 while (color >= 360){
                     color = color / 2;
                 }
-                m = map.addMarker(new MarkerOptions().position(start_point).title(e.getEventID()).icon(BitmapDescriptorFactory
+                m = myMap.addMarker(new MarkerOptions().position(start_point).title(e.getEventID()).icon(BitmapDescriptorFactory
                         .defaultMarker(color)));
                 colors.add(color);
             }
             else {
-                m = map.addMarker(new MarkerOptions().position(start_point).title(e.getEventID()).icon(BitmapDescriptorFactory
+                m = myMap.addMarker(new MarkerOptions().position(start_point).title(e.getEventID()).icon(BitmapDescriptorFactory
                         .defaultMarker(colors.get(check))));
             }
             assert m != null;
             m.setTag(e);
-            //Life Story Line
 
-            //Family Tree Line
             if (events.contains(data.getUserEvents().get(0))) {
                 start_point = new LatLng(data.getUserEvents().get(0).getLatitude(), data.getUserEvents().get(0).getLongitude());
-                map.animateCamera(CameraUpdateFactory.newLatLng(start_point));
             }
             else {
                 start_point = new LatLng(events.get(0).getLatitude(), events.get(0).getLongitude());
-                map.animateCamera(CameraUpdateFactory.newLatLng(start_point));
             }
+            myMap.animateCamera(CameraUpdateFactory.newLatLng(start_point));
 
             e = null;
             for (Event event : data.getEvents()){
@@ -184,18 +179,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
             if (e != null){
                 LatLng event = new LatLng(e.getLatitude(), e.getLongitude());
-                map.animateCamera(CameraUpdateFactory.newLatLng(event));
-                TextView textview = view.findViewById(R.id.mapTextView);
+                myMap.animateCamera(CameraUpdateFactory.newLatLng(event));
+                TextView textview = myView.findViewById(R.id.mapTextView);
                 Person g = null;
                 for (Person p :data.getPeople()) {
                     if (p.getPersonID().equals(e.getPersonID())){
                         g = p;
                     }
                 }
-                for(Polyline line : polylines) {
+                for(Polyline line : polylineList) {
                     line.remove();
                 }
-                polylines.clear();
+                polylineList.clear();
 
                 if (data.getSpouseLines()) {
                     //Spouse Line
@@ -227,12 +222,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             }
                             if (j != null) {
                                 LatLng spouse = new LatLng(j.getLatitude(), j.getLongitude());
-                                Polyline p = map.addPolyline(new PolylineOptions()
+                                Polyline p = myMap.addPolyline(new PolylineOptions()
                                         .add(sydney, spouse)
                                         .width(10)
                                         .color(Color.BLACK));
 
-                                polylines.add(p);
+                                polylineList.add(p);
                             }
                             lineEvents.clear();
                         }
@@ -240,25 +235,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 }
                 if (g != null && data.getEventLines()) {
                     //Life Story Lines
-                    ArrayList<Event> lineEvents2 = new ArrayList<>();
+                    ArrayList<Event> eventLineList = new ArrayList<>();
                     for (Event f : data.getEvents()) {
 
                         if (f.getPersonID().equals(g.getPersonID())) {
-                            lineEvents2.add(f);
+                            eventLineList.add(f);
                         }
                     }
                     Comparator<Event> EventSorter = Comparator.comparingInt(Event::getYear);
-                    lineEvents2.sort(EventSorter);
-                    for (int i = 0; i < lineEvents2.size() - 1; ++i) {
-                        LatLng current = new LatLng(lineEvents2.get(i).getLatitude(), lineEvents2.get(i).getLongitude());
-                        LatLng next = new LatLng(lineEvents2.get(i + 1).getLatitude(), lineEvents2.get(i + 1).getLongitude());
-                        Polyline p = map.addPolyline(new PolylineOptions()
+                    eventLineList.sort(EventSorter);
+                    for (int i = 0; i < eventLineList.size() - 1; ++i) {
+                        LatLng current = new LatLng(eventLineList.get(i).getLatitude(), eventLineList.get(i).getLongitude());
+                        LatLng next = new LatLng(eventLineList.get(i + 1).getLatitude(), eventLineList.get(i + 1).getLongitude());
+                        Polyline p = myMap.addPolyline(new PolylineOptions()
                                 .add(current, next)
                                 .width(8)
                                 .color(Color.YELLOW));
-                        polylines.add(p);
+                        polylineList.add(p);
                     }
-                    lineEvents2.clear();
+                    eventLineList.clear();
                 }
 
 
@@ -297,12 +292,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
         }
 
-        map.setOnMarkerClickListener(m -> {
-            for(Polyline line : polylines) {
+        myMap.setOnMarkerClickListener(m -> {
+            for(Polyline line : polylineList) {
                 line.remove();
             }
-            polylines.clear();
-            TextView textview = view.findViewById(R.id.mapTextView);
+            polylineList.clear();
+            TextView textview = myView.findViewById(R.id.mapTextView);
             Event e = (Event) m.getTag();
             Person g = null;
             for (Person p :data.getPeople()) {
@@ -349,7 +344,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                 Person finalG = g;
                 LatLng sydney = new LatLng(e.getLatitude(), e.getLongitude());
-                map.animateCamera(CameraUpdateFactory.newLatLng(sydney));
+                myMap.animateCamera(CameraUpdateFactory.newLatLng(sydney));
                 textview.setOnClickListener(v -> {
                     Intent intent = new Intent(getContext(), PersonActivity.class);
                     intent.putExtra("THIS_PERSON", finalG.getPersonID());
@@ -386,12 +381,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                         }
                         if (j != null) {
                             LatLng spouse = new LatLng(j.getLatitude(), j.getLongitude());
-                            Polyline p = map.addPolyline(new PolylineOptions()
+                            Polyline p = myMap.addPolyline(new PolylineOptions()
                                     .add(sydney, spouse)
                                     .width(10)
                                     .color(Color.BLACK));
 
-                            polylines.add(p);
+                            polylineList.add(p);
                         }
                         events1.clear();
                     }
@@ -411,17 +406,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 for (int i = 0; i < events1.size() - 1; ++i) {
                     LatLng current = new LatLng(events1.get(i).getLatitude(), events1.get(i).getLongitude());
                     LatLng next = new LatLng(events1.get(i + 1).getLatitude(), events1.get(i + 1).getLongitude());
-                    Polyline p = map.addPolyline(new PolylineOptions()
+                    Polyline p = myMap.addPolyline(new PolylineOptions()
                             .add(current, next)
                             .width(8)
                             .color(Color.YELLOW));
-                    polylines.add(p);
+                    polylineList.add(p);
                 }
                 events1.clear();
             }
             if (data.getFamilyTreeLines()) {
                 //family tree lines
-                familyTreeLineHelper(g, e, 16);
+                familyTreeLines(g, e, 20);
             }
             return true;
         });
@@ -438,23 +433,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void familyTreeLineHelper(Person g, Event e, int num){
+    private void familyTreeLines(Person g, Event e, int num){
         if (num <= 0){
             num = 1;
         }
         DataCache data = DataCache.getInstance();
         if (g.getFatherID() != null) {
-            Person f = null;
-            for (Person p : data.getPeople()) {
-                if (g.getFatherID().equals(p.getPersonID())) {
-                    f = p;
+            Person father = null;
+            for (Person person : data.getPeople()) {
+                if (g.getFatherID().equals(person.getPersonID())) {
+                    father = person;
                 }
             }
 
             Event j = null;
             ArrayList<Event> events = new ArrayList<>();
             for (Event d : data.getEvents()) {
-                if (f != null && d.getPersonID().equals(f.getPersonID())) {
+                if (father != null && d.getPersonID().equals(father.getPersonID())) {
                     events.add(d);
                 }
             }
@@ -472,12 +467,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                 LatLng current = new LatLng(e.getLatitude(), e.getLongitude());
                 LatLng next = new LatLng(j.getLatitude(), j.getLongitude());
-                Polyline p = map.addPolyline(new PolylineOptions()
+                Polyline p = myMap.addPolyline(new PolylineOptions()
                         .add(current, next)
                         .width(num)
                         .color(Color.BLUE));
-                polylines.add(p);
-                familyTreeLineHelper(f, j, num - 4);
+                polylineList.add(p);
+                familyTreeLines(father, j, num - 5);
             }
         }
         if (g.getMotherID() != null) {
@@ -495,7 +490,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 }
             }
             for (Event event : events){
-                if (event.getEventType().equals("birth")){
+                if (event.getEventType().toLowerCase(Locale.ROOT).equals("birth")){
                     j = event;
                 }
             }
@@ -507,12 +502,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 }
                 LatLng current = new LatLng(e.getLatitude(), e.getLongitude());
                 LatLng next = new LatLng(j.getLatitude(), j.getLongitude());
-                Polyline p = map.addPolyline(new PolylineOptions()
+                Polyline p = myMap.addPolyline(new PolylineOptions()
                         .add(current, next)
                         .width(num)
                         .color(Color.MAGENTA));
-                polylines.add(p);
-                familyTreeLineHelper(m, j, num - 4);
+                polylineList.add(p);
+                familyTreeLines(m, j, num - 5);
             }
         }
     }

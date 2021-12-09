@@ -1,5 +1,5 @@
-package com.example.familymapclient.UI;
-import com.example.familymapclient.R;
+package com.example.FamilyMapClient.UI;
+import com.example.FamilyMapClient.R;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -125,9 +125,9 @@ public class SearchActivity extends AppCompatActivity {
             View view;
 
             if(viewType == PERSON_ITEM_VIEW_TYPE) {
-                view = getLayoutInflater().inflate(R.layout.person_item, parent, false);
+                view = getLayoutInflater().inflate(R.layout.item_person, parent, false);
             } else {
-                view = getLayoutInflater().inflate(R.layout.event_item, parent, false);
+                view = getLayoutInflater().inflate(R.layout.item_event, parent, false);
             }
 
             return new SearchViewHolder(view, viewType);
@@ -179,20 +179,19 @@ public class SearchActivity extends AppCompatActivity {
                     .append(" ")
                     .append(Person.getLastName()).toString());
 
-            ImageView searchpersonImageView = itemView.findViewById(R.id.iconField);
+            ImageView searchPersonItemView = itemView.findViewById(R.id.iconField);
             Drawable genderIcon;
 
             if (Person.getGender().toUpperCase(Locale.ROOT).equals("M")){
                 genderIcon = new IconDrawable(SearchActivity.this, FontAwesomeIcons.fa_male)
                         .colorRes(R.color.black)
                         .sizeDp(40);
-                searchpersonImageView.setImageDrawable(genderIcon);
             }else{
                 genderIcon = new IconDrawable(SearchActivity.this, FontAwesomeIcons.fa_female)
                         .colorRes(R.color.black)
                         .sizeDp(40);
-                searchpersonImageView.setImageDrawable(genderIcon);
             }
+            searchPersonItemView.setImageDrawable(genderIcon);
 
 
         }
@@ -232,18 +231,18 @@ public class SearchActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
+            Intent intent;
             if (viewType == PERSON_ITEM_VIEW_TYPE) {
-                Intent intent = new Intent(SearchActivity.this, PersonActivity.class);
+                intent = new Intent(SearchActivity.this, PersonActivity.class);
                 intent.putExtra("THIS_PERSON", Person.getPersonID());
-                startActivity(intent);
             } else {
-                Intent intent = new Intent(SearchActivity.this, EventActivity.class);
+                intent = new Intent(SearchActivity.this, EventActivity.class);
                 intent.putExtra("THIS_EVENT", Event.getEventID());
                 finish();
-                startActivity(intent);
 
 
             }
+            startActivity(intent);
         }
     }
 }

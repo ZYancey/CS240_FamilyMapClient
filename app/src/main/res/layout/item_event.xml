@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,8 +16,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:paddingRight="5dp"
-            android:id="@+id/iconField">
+            android:paddingEnd="5dp"
+            android:id="@+id/iconField"
+            tools:ignore="ContentDescription,RtlSymmetry">
         </ImageView>
 
         <LinearLayout
@@ -24,11 +27,18 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/PersonTitle"
+                android:id="@+id/EventTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PERSON"
+                android:text="@string/events"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/EventPerson"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/eventtype"
+                android:textStyle="italic" />
         </LinearLayout>
     </LinearLayout>
     <View

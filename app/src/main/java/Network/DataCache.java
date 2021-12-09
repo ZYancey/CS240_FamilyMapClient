@@ -19,6 +19,9 @@ public class DataCache {
     private String              userPersonID;
 
     private ArrayList<Person>   People = new ArrayList<>();
+
+
+
     private ArrayList<Event>    OriginalEvents = new ArrayList<>();
     private ArrayList<Event>    Events = new ArrayList<>();
     private ArrayList<Person>   MothersSidePeople = new ArrayList<>();
@@ -213,6 +216,9 @@ public class DataCache {
             }
         }
         return userEvents;
+    }
+    public ArrayList<Event> getOriginalEvents() {
+        return OriginalEvents;
     }
 
     private void getMaleFamilySide(String personID){

@@ -26,4 +26,10 @@
     <string name="PersonLastNameBox">Last Name</string>
     <string name="PersonNameBox">First Name</string>
     <string name="this_is_my_map_fragment">This is my Map fragment!!</string>
+    <string name="events">Events</string>
+    <string name="eventtype">EventType</string>
+    <string name="type_your_search_query_below">Type your Search Query Below</string>
+    <string name="person">PERSON</string>
+    <string name="family">Events</string>
+    <string name="familyRelationship">EventType</string>
 </resources>

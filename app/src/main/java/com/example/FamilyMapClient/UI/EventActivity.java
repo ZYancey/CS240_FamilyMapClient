@@ -1,5 +1,5 @@
-package com.example.familymapclient.UI;
-import com.example.familymapclient.R;
+package com.example.FamilyMapClient.UI;
+import com.example.FamilyMapClient.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import Network.DataCache;
 
 public class EventActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         DataCache data = DataCache.getInstance();
@@ -19,11 +18,11 @@ public class EventActivity extends AppCompatActivity {
         String eventID = getIntent().getStringExtra("THIS_EVENT");
         setContentView(R.layout.activity_event);
         FragmentManager fm = this.getSupportFragmentManager();
-        MapFragment frag = (MapFragment) fm.findFragmentById(R.id.fragment_map);
+        MapFragment frag = (MapFragment) fm.findFragmentById(R.id.map_fragment);
         if (frag == null) {
             frag = EventActivity.createMapFragment(data.getUsername(), eventID);
             fm.beginTransaction()
-                    .add(R.id.fragment_map,frag)
+                    .add(R.id.map_fragment,frag)
                     .commit();
         }
 

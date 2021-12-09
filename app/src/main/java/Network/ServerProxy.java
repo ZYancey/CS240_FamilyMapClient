@@ -23,7 +23,6 @@ import result.PersonResult;
 
 
 public class ServerProxy {
-
     private static final DataCache data = DataCache.getInstance();
     private static final String host = data.getFMSHost();
     private static final String port = data.getFMSPort();
@@ -56,15 +55,15 @@ public class ServerProxy {
                 buf.append((char) b);
             }
 
-            AuthToken L = (AuthToken) JSONParse.deserialize(buf.toString(), AuthToken.class);
+            AuthToken loginToken = (AuthToken) JSONParse.deserialize(buf.toString(), AuthToken.class);
 
             DataCache data = DataCache.getInstance();
 
             data.refreshDataCache();
 
-            data.setUsername(L.getUserName(), L.getPersonID());
-            data.setAuthToken(L);
-            AuthResult LRes = new AuthResult(L);
+            data.setUsername(loginToken.getUserName(), loginToken.getPersonID());
+            data.setAuthToken(loginToken);
+            AuthResult LRes = new AuthResult(loginToken);
             LRes.setMessage("valid");
             return LRes;
         }
@@ -73,7 +72,6 @@ public class ServerProxy {
         }
 
     }
-
 
     public AuthResult runRegister(RegisterRequest r) throws IOException {
         URL url = new URL("http://" + host + ":" + port + "/user/register");
@@ -102,14 +100,14 @@ public class ServerProxy {
                 buf.append((char) b);
             }
 
-            AuthToken L = (AuthToken) JSONParse.deserialize(buf.toString(), AuthToken.class);
+            AuthToken loginToken = (AuthToken) JSONParse.deserialize(buf.toString(), AuthToken.class);
 
             DataCache data = DataCache.getInstance();
             data.refreshDataCache();
 
-            data.setUsername(L.getUserName(), L.getPersonID());
-            data.setAuthToken(L);
-            AuthResult LRes = new AuthResult(L);
+            data.setUsername(loginToken.getUserName(), loginToken.getPersonID());
+            data.setAuthToken(loginToken);
+            AuthResult LRes = new AuthResult(loginToken);
             LRes.setMessage("valid");
             return LRes;
         }
@@ -119,8 +117,8 @@ public class ServerProxy {
 
     }
 
+
     public void getUserPersonData(AuthToken authToken) throws IOException {
-    ///TODO FIX CRASH WHEN USER ATTEMPTS TO LOGIN AND DOES NOT EXIST YET .getPersonID() results in Null
         URL url = new URL("http://" + host + ":" + port+ "/person/" + authToken.getPersonID());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setReadTimeout(5000);
@@ -145,13 +143,11 @@ public class ServerProxy {
             L.setMessage("valid");
         }
         else{
-            PersonResult L = new PersonResult("Failed to receive Result");
+            new PersonResult("Failed to receive Result");
         }
     }
 
-
-
-    public PersonResult runPeople(String authToken) throws IOException {
+    public PersonResult getPersons(String authToken) throws IOException {
         URL url = new URL("http://" + host + ":" + port+ "/person");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setReadTimeout(5000);
@@ -175,7 +171,7 @@ public class ServerProxy {
 
             Person[] P = K.getData();
 
-            ArrayList<Person> list1 = new ArrayList<Person>();
+            ArrayList<Person> list1 = new ArrayList<>();
             Collections.addAll(list1, P);
 
 
@@ -192,8 +188,7 @@ public class ServerProxy {
 
     }
 
-
-    public EventResult runEvents(String authToken) throws IOException {
+    public EventResult getEvents(String authToken) throws IOException {
         URL url = new URL("http://" + host + ":" + port + "/event");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setReadTimeout(5000);
@@ -217,7 +212,7 @@ public class ServerProxy {
 
             Event[] E = K.getData();
 
-            ArrayList<Event> list1 = new ArrayList<Event>();
+            ArrayList<Event> list1 = new ArrayList<>();
             Collections.addAll(list1, E);
 
             data.setOriginalEvents(list1);

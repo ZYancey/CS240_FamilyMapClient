@@ -1,5 +1,6 @@
 package Logic;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -16,12 +17,10 @@ import modelClass.Person;
 
 import result.PersonResult;
 
+@SuppressLint("StaticFieldLeak")
 public class PeopleTask extends AsyncTask<String, Integer, PersonResult> {
-    private Context mcontext;
-    interface PeopleTaskListener {
-        void progressUpdated(int progress);
-        void taskCompleted(long result);
-    }
+    private final Context mcontext;
+    interface PeopleTaskListener {}
     public PeopleTask(Context context){
         mcontext = context;
     }
@@ -32,24 +31,12 @@ public class PeopleTask extends AsyncTask<String, Integer, PersonResult> {
         listeners.add(listener);
     }
 
-    private void fireProgressUpdate(int progress) {
-        for(PeopleTaskListener listener : listeners) {
-            listener.progressUpdated(progress);
-        }
-    }
-
-    private void fireTaskCompleted(long result) {
-        for(PeopleTaskListener listener : listeners) {
-            listener.taskCompleted(result);
-        }
-    }
-
     @Override
     protected PersonResult doInBackground(String... authToken) {
         PersonResult PeopleResult = new PersonResult("test");
         ServerProxy serverProxy = new ServerProxy();
         try {
-            PeopleResult = serverProxy.runPeople(authToken[0]);
+            PeopleResult = serverProxy.getPersons(authToken[0]);
 
         }catch (IOException e){
             System.out.println(e.getMessage());
@@ -61,13 +48,11 @@ public class PeopleTask extends AsyncTask<String, Integer, PersonResult> {
 
     @Override
     protected void onPostExecute(PersonResult result) {
-        if (!result.getMessage().contains("val")) {
-        }
-        else {
+        if (result.getMessage().contains("val")) {
             DataCache data = DataCache.getInstance();
             Person[] R = result.getData();
 
-            ArrayList<Person> list1 = new ArrayList<Person>();
+            ArrayList<Person> list1 = new ArrayList<>();
             Collections.addAll(list1, R);
 
             data.setPeople(list1);

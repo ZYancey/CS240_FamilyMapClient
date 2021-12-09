@@ -1,4 +1,4 @@
-package com.example.familymapclient.UI;
+package com.example.FamilyMapClient.UI;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.familymapclient.R;
+import com.example.FamilyMapClient.R;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void switchToMap(String userName){
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer);
+        fragmentManager.findFragmentById(R.id.fragmentContainer);
         MapFragment mapFragment = createMapFragment(userName);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void switchToLogin(String userName){
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer);
+        fragmentManager.findFragmentById(R.id.fragmentContainer);
         LoginFragment loginFragment = createLoginFragment(userName);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();

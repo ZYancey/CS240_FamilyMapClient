@@ -1,5 +1,5 @@
-package com.example.familymapclient.UI;
-import com.example.familymapclient.R;
+package com.example.FamilyMapClient.UI;
+import com.example.FamilyMapClient.R;
 
 import android.os.Bundle;
 
@@ -49,10 +49,10 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            String title = getArguments().getString(ARG_TITLE);
+            getArguments().getString(ARG_TITLE);
         }
-
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
@@ -73,7 +73,7 @@ public class LoginFragment extends Fragment {
             for (int x = 0; x < childCount; x++) {
                 RadioButton btn = (RadioButton) group.getChildAt(x);
                 if (btn.getId() == checkedId) {
-                    gender[0] = btn.getText().toString();// here gender will contain M or F.
+                    gender[0] = btn.getText().toString();
                 }
             }
             Log.e("Gender", gender[0]);
@@ -88,11 +88,11 @@ public class LoginFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
-                String h = serverHostEditText.getText().toString().trim();
-                String sp = serverPortEditText.getText().toString().trim();
-                String p = passwordEditText.getText().toString().trim();
-                String u = userNameText.getText().toString().trim();
-                loginButton.setEnabled(!h.isEmpty() && !sp.isEmpty() && !p.isEmpty() && !u.isEmpty());
+                String host = serverHostEditText.getText().toString().trim();
+                String port = serverPortEditText.getText().toString().trim();
+                String pass = passwordEditText.getText().toString().trim();
+                String user = userNameText.getText().toString().trim();
+                loginButton.setEnabled(!host.isEmpty() && !port.isEmpty() && !pass.isEmpty() && !user.isEmpty());
 
             }
             @Override
@@ -114,7 +114,7 @@ public class LoginFragment extends Fragment {
         });
         Button registerButton = view.findViewById(R.id.buttonRegister);
         registerButton.setEnabled(false);
-        TextWatcher watcher2 = new TextWatcher() {
+        TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int
                     count, int after) {
@@ -138,13 +138,13 @@ public class LoginFragment extends Fragment {
 
             }
         };
-        serverHostEditText.addTextChangedListener(watcher2);
-        serverPortEditText.addTextChangedListener(watcher2);
-        passwordEditText.addTextChangedListener(watcher2);
-        userNameText.addTextChangedListener(watcher2);
-        firstNameEditText.addTextChangedListener(watcher2);
-        lastNameEditText.addTextChangedListener(watcher2);
-        emailEditText.addTextChangedListener(watcher2);
+        serverHostEditText.addTextChangedListener(textWatcher);
+        serverPortEditText.addTextChangedListener(textWatcher);
+        passwordEditText.addTextChangedListener(textWatcher);
+        userNameText.addTextChangedListener(textWatcher);
+        firstNameEditText.addTextChangedListener(textWatcher);
+        lastNameEditText.addTextChangedListener(textWatcher);
+        emailEditText.addTextChangedListener(textWatcher);
 
         registerButton.setOnClickListener(v -> {
             String finalGender = gender[0];
@@ -169,6 +169,13 @@ public class LoginFragment extends Fragment {
         });
         return view;
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i(LOG_TAG, "in onSaveInstanceState(Bundle)");
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -211,9 +218,5 @@ public class LoginFragment extends Fragment {
         Log.i(LOG_TAG, "in onDetach()");
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.i(LOG_TAG, "in onSaveInstanceState(Bundle)");
-    }
+
 }

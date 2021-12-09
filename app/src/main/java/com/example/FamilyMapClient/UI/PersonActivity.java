@@ -1,5 +1,5 @@
-package com.example.familymapclient.UI;
-import com.example.familymapclient.R;
+package com.example.FamilyMapClient.UI;
+import com.example.FamilyMapClient.R;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -177,7 +177,7 @@ public class PersonActivity extends AppCompatActivity {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             if(convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.list_item_group, parent, false);
+                convertView = getLayoutInflater().inflate(R.layout.item_dropdown, parent, false);
             }
 
             TextView titleView = convertView.findViewById(R.id.listTitle);
@@ -202,11 +202,11 @@ public class PersonActivity extends AppCompatActivity {
 
             switch(groupPosition) {
                 case FAMILY_GROUP_POSITION:
-                    itemView = getLayoutInflater().inflate(R.layout.family_item, parent, false);
+                    itemView = getLayoutInflater().inflate(R.layout.item_family, parent, false);
                     initializeFamilyView(itemView, childPosition);
                     break;
                 case EVENT_GROUP_POSITION:
-                    itemView = getLayoutInflater().inflate(R.layout.events_item, parent, false);
+                    itemView = getLayoutInflater().inflate(R.layout.item_events, parent, false);
                     initializeEventView(itemView, childPosition);
                     break;
                 default:
@@ -249,16 +249,12 @@ public class PersonActivity extends AppCompatActivity {
                 genderIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_male)
                         .colorRes(R.color.black)
                         .sizeDp(40);
-                familyImageView.setImageDrawable(genderIcon);
             }else{
                 genderIcon = new IconDrawable(PersonActivity.this, FontAwesomeIcons.fa_female)
                         .colorRes(R.color.black)
                         .sizeDp(40);
-                familyImageView.setImageDrawable(genderIcon);
             }
-
-
-
+            familyImageView.setImageDrawable(genderIcon);
 
 
             FamilyItemView.setOnClickListener(v -> {

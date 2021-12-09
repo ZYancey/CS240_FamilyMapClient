@@ -1,6 +1,7 @@
 package Logic;
-import com.example.familymapclient.UI.MainActivity;
+import com.example.FamilyMapClient.UI.MainActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -15,11 +16,9 @@ import request.RegisterRequest;
 import result.AuthResult;
 
 public class RegisterTask extends AsyncTask<RegisterRequest, Integer, AuthResult> {
-private Context mcontext;
-interface RegisterTaskListener {
-    void progressUpdated(int progress);
-    void taskCompleted(long result);
-}
+@SuppressLint("StaticFieldLeak")
+private final Context mcontext;
+interface RegisterTaskListener { }
     public RegisterTask(Context context){
         mcontext = context;
     }
@@ -28,18 +27,6 @@ interface RegisterTaskListener {
 
     void registerListener(RegisterTaskListener listener) {
         listeners.add(listener);
-    }
-
-    private void fireProgressUpdate(int progress) {
-        for(RegisterTaskListener listener : listeners) {
-            listener.progressUpdated(progress);
-        }
-    }
-
-    private void fireTaskCompleted(long result) {
-        for(RegisterTaskListener listener : listeners) {
-            listener.taskCompleted(result);
-        }
     }
 
     @Override
@@ -64,18 +51,13 @@ interface RegisterTaskListener {
         }
         else {
             DataCache data = DataCache.getInstance();
-            String FN = data.getUserFullName();
-            Toast.makeText(mcontext, FN, Toast.LENGTH_LONG).show();
-
 
             PeopleTask task = new PeopleTask(mcontext);
             task.execute(data.getAuthToken().getAuthTokenID());
             EventsTask tasks = new EventsTask(mcontext);
             tasks.execute(data.getAuthToken().getAuthTokenID());
 
-
             MainActivity.getInstance().switchToMap(data.getUsername());
-
         }
     }
 }

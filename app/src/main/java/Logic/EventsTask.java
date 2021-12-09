@@ -1,5 +1,6 @@
 package Logic;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -15,11 +16,9 @@ import modelClass.Event;
 import result.EventResult;
 
 public class EventsTask extends AsyncTask<String, Integer, EventResult> {
-    private Context mcontext;
-    interface EventsTaskListener {
-        void progressUpdated(int progress);
-        void taskCompleted(long result);
-    }
+    @SuppressLint("StaticFieldLeak")
+    private final Context mcontext;
+    interface EventsTaskListener {}
     public EventsTask(Context context){
         mcontext = context;
     }
@@ -30,24 +29,13 @@ public class EventsTask extends AsyncTask<String, Integer, EventResult> {
         listeners.add(listener);
     }
 
-    private void fireProgressUpdate(int progress) {
-        for(EventsTaskListener listener : listeners) {
-            listener.progressUpdated(progress);
-        }
-    }
-
-    private void fireTaskCompleted(long result) {
-        for(EventsTaskListener listener : listeners) {
-            listener.taskCompleted(result);
-        }
-    }
 
     @Override
     protected EventResult doInBackground(String... authToken) {
         EventResult EventsResult = new EventResult("EXAMPLE STRING");
         ServerProxy serverProxy = new ServerProxy();
         try {
-            EventsResult = serverProxy.runEvents(authToken[0]);
+            EventsResult = serverProxy.getEvents(authToken[0]);
 
         }catch (IOException e){
             System.out.println(e.getMessage());
@@ -60,17 +48,15 @@ public class EventsTask extends AsyncTask<String, Integer, EventResult> {
 
     @Override
     protected void onPostExecute(EventResult result) {
-        if (!result.getMessage().contains("val")) {
-        }
-        else {
+        if (result.getMessage().contains("val")) {
             DataCache data = DataCache.getInstance();
-            Event[] R = result.getData();
+            Event[] resultData = result.getData();
 
-            ArrayList<Event> list1 = new ArrayList<Event>();
-            Collections.addAll(list1, R);
+            ArrayList<Event> tempList = new ArrayList<>();
+            Collections.addAll(tempList, resultData);
 
 
-            data.setOriginalEvents(list1);
+            data.setOriginalEvents(tempList);
         }
     }
 }
